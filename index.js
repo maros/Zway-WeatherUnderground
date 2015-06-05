@@ -9,6 +9,8 @@ Description:
 
 ******************************************************************************/
 
+executeFile(config.libPath + "/underscore_deep_extend.js");
+
 function WeatherUnderground (id, controller) {
     // Call superconstructor first (AutomationModule)
     WeatherUnderground.super_.call(this, id, controller);
@@ -32,23 +34,20 @@ WeatherUnderground.prototype.init = function (config) {
     this.location = config.location.toString();
     this.unit_temperature = config.unit_temperature.toString();
     this.unit_system = config.unit_system.toString();
-    this.device = {};
+    this.devices = {};
     
-    this.device.current = self.controller.devices.create({
-        deviceId: "WeatherUnderground_Current_" + this.id,
+    this.addDevice('current',{
         defaults: {
-            deviceType: "sensorMultilevel",
             metrics: {
                 probeTitle: 'Temperature'
             }
         },
         overlay: {
             metrics: {
-                scaleTitle: this.unit_temperature === "celsius" ? '°C' : '°F',
+                scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
                 title: "Current Condition"
             }
         },
-        moduleId: "Current_"+this.id
     });
 
     this.timer = setInterval(function() {
@@ -66,13 +65,30 @@ WeatherUnderground.prototype.stop = function () {
         clearInterval(this.timer);
     }
 
-    if (typeof this.device !== 'undefined') {
+    if (typeof this.devices !== 'undefined') {
         _.each(this.devices,function(value, key, list) {
-            
             self.controller.devices.remove(value.id);
         });
-        this.vDev = null;
+        this.devices = {};
     }
+};
+
+WeatherUnderground.prototype.addDevice = function(prefix,params) {
+    var self = this;
+    
+    var device_params = _.deepExtend(
+        params,
+        {
+            deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
+            defaults: {
+                deviceType: "sensorMultilevel",
+            },
+            overlay: {},
+            moduleId: prefix+"_"+this.id
+        }
+    );
+    
+    this.devices[prefix] = self.controller.devices.create(device_params);
 };
 
 // ----------------------------------------------------------------------------
@@ -89,21 +105,48 @@ WeatherUnderground.prototype.fetchWeather = function () {
     http.request({
         url: url,
         async: true,
-        success: function(res) {
-            try {
-                var temp = Math.round((self.config.units === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
-                    icon = "http://openweathermap.org/img/w/" + res.data.weather[0].icon + ".png";
-    
-                self.vDev.set("metrics:level", temp);
-                self.vDev.set("metrics:icon", icon);
-            } catch (e) {
-                self.controller.addNotification("error", langFile.err_parse, "module", moduleName);
-            }
-        },
+        success: self.processResponse,
         error: function() {
             self.controller.addNotification("error", langFile.err_fetch, "module", moduleName);
         }
     });
-}
+};
+
+WeatherUnderground.prototype.processResponse = function(resp) {
+    
+    var data = resp.data.current_observation;
+//    data.temp_f
+//    data.temp_c
+//    data.relative_humidity
+//    data.wind_mph": 22.0,
+//    data.wind_gust_mph": "28.0",
+//    data.wind_kph": 35.4,
+//    data.wind_gust_kph": "45.1",
+//    
+//    data.solarradiation
+//    data.UV
+//    data.weather
+//    data.icon
+//    data.precip_1hr_metric
+//    data.precip_1hr_in
+//    
+//    data.pressure_mb
+//    data.pressure_in
+//    
+//    data.observation_location.city
+//    
+//    data.forecast.X.
+//    
+//    
+//    var temp = Math.round((self.config.units === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
+//        icon = "http://openweathermap.org/img/w/" + res.data.weather[0].icon + ".png";
+//
+//    self.vDev.set("metrics:level", temp);
+//    self.vDev.set("metrics:icon", icon);
+//} catch (e) {
+//    self.controller.addNotification("error", langFile.err_parse, "module", moduleName);
+//}
+
+};
 
  
