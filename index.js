@@ -105,48 +105,52 @@ WeatherUnderground.prototype.fetchWeather = function () {
     http.request({
         url: url,
         async: true,
-        success: self.processResponse,
+        success: function(response) { self.processResponse(response) },
         error: function() {
             self.controller.addNotification("error", langFile.err_fetch, "module", moduleName);
         }
     });
 };
 
-WeatherUnderground.prototype.processResponse = function(resp) {
+WeatherUnderground.prototype.processResponse = function(response) {
+    var self = this;
+    var current = response.data.current_observation;
     
-    var data = resp.data.current_observation;
-//    data.temp_f
-//    data.temp_c
-//    data.relative_humidity
-//    data.wind_mph": 22.0,
-//    data.wind_gust_mph": "28.0",
-//    data.wind_kph": 35.4,
-//    data.wind_gust_kph": "45.1",
-//    
-//    data.solarradiation
-//    data.UV
-//    data.weather
-//    data.icon
-//    data.precip_1hr_metric
-//    data.precip_1hr_in
-//    
-//    data.pressure_mb
-//    data.pressure_in
-//    
-//    data.observation_location.city
-//    
-//    data.forecast.X.
-//    
-//    
-//    var temp = Math.round((self.config.units === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
-//        icon = "http://openweathermap.org/img/w/" + res.data.weather[0].icon + ".png";
-//
-//    self.vDev.set("metrics:level", temp);
-//    self.vDev.set("metrics:icon", icon);
-//} catch (e) {
-//    self.controller.addNotification("error", langFile.err_parse, "module", moduleName);
-//}
+    self.devices.current.set("metrics:level", (self.config.units === "celsius" ? current.temp_c : current.temp_f));
+    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+current.icon+".gif");
+/*
+    data.temp_f
+    data.temp_c
+    data.relative_humidity
+    data.wind_mph": 22.0,
+    data.wind_gust_mph": "28.0",
+    data.wind_kph": 35.4,
+    data.wind_gust_kph": "45.1",
+    
+    data.solarradiation
+    data.UV
+    data.weather
+    data.icon
+    data.precip_1hr_metric
+    data.precip_1hr_in
+    
+    data.pressure_mb
+    data.pressure_in
+    
+    data.observation_location.city
+    
+    data.forecast.X.
+    
+    
+    var temp = Math.round((self.config.units === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
+        icon = "http://openweathermap.org/img/w/" + res.data.weather[0].icon + ".png";
 
+    self.vDev.set("metrics:level", temp);
+    self.vDev.set("metrics:icon", icon);
+} catch (e) {
+    self.controller.addNotification("error", langFile.err_parse, "module", moduleName);
+}
+**/
 };
 
  
