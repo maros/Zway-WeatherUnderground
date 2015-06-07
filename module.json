@@ -12,7 +12,8 @@
         "source": "https://github.com/maros/Zway-WeatherUnderground"
     },
     "defaults": {
-        "title": "__title__", // http://www.wunderground.com/weather/api/d/docs?d=data/forecast
+        "title": "__title__",
+        "description": "__description__",
         "unit_temperature": "celsius",
         "unit_system": "metric"
     },
@@ -49,15 +50,15 @@
             "unit_temperature": {
                 "label": "__unit_temperature__",
                 "optionLabels": ["°C", "°F"],
-                "type": "select",
+                "type": "select"
             },
             "unit_system": {
                 "label": "__unit_system__",
                 "optionLabels": ["__unit_system_metric__", "__unit_system_imperial__"],
-                "type": "select",
+                "type": "select"
             },
             "api_key": {
-                "label": "__api_key__",
+                "label": "__api_key__"
             }
         }
     }
