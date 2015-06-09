@@ -4,7 +4,7 @@
     "category": "environment",
     "author": "Maroš Kollár",
     "homepage": "http://k-1.com",
-    "icon": "myhome.png",
+    "icon": "",
     "version": "1.0.0",
     "maturity": "stable",
     "repository": {
@@ -14,6 +14,8 @@
     "defaults": {
         "title": "__title__",
         "description": "__description__",
+        "location": "autoip",
+        "api_key": "",
         "unit_temperature": "celsius",
         "unit_system": "metric"
     },
@@ -39,23 +41,20 @@
                 "required": true
             }
         },
-        "required": false
+        "required": true
     },
     "options": {
         "fields": {
             "location": {
-                "label": "__location__",
-                "type": "input"
+                "label": "__location__"
             },
             "unit_temperature": {
                 "label": "__unit_temperature__",
-                "optionLabels": ["°C", "°F"],
-                "type": "select"
+                "optionLabels": ["°C", "°F"]
             },
             "unit_system": {
                 "label": "__unit_system__",
-                "optionLabels": ["__unit_system_metric__", "__unit_system_imperial__"],
-                "type": "select"
+                "optionLabels": ["__unit_system_metric__", "__unit_system_imperial__"]
             },
             "api_key": {
                 "label": "__api_key__"
