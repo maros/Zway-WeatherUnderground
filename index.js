@@ -96,25 +96,24 @@ WeatherUnderground.prototype.addDevice = function(prefix,params) {
 // --- Module methods
 // ----------------------------------------------------------------------------
 
-WeatherUnderground.prototype.fetchWeather = function () {
+WeatherUnderground.prototype.fetchWeather = function (instance) {
     var self = instance,
-        moduleName = "WeatherUnderground",
-        langFile = self.controller.loadModuleLang(moduleName);
-    
+        moduleName = "WeatherUnderground";
+    var langFile = self.controller.loadModuleLang(moduleName);
     var url = "http://api.wunderground.com/api/"+self.config.api_key+"/conditions/forecast/q/"+self.config.location+".json";
     
     http.request({
         url: url,
         async: true,
-        success: function(response) { self.processResponse(response) },
+        success: function(response) { self.processResponse(instance,response) },
         error: function() {
             self.controller.addNotification("error", langFile.err_fetch, "module", moduleName);
         }
     });
 };
 
-WeatherUnderground.prototype.processResponse = function(response) {
-    var self = this;
+WeatherUnderground.prototype.processResponse = function(instance,response) {
+    var self = instance;
     var current = response.data.current_observation;
     
     self.devices.current.set("metrics:level", (self.config.units === "celsius" ? current.temp_c : current.temp_f));
