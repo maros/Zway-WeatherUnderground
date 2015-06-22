@@ -114,7 +114,7 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
     var self = instance,
         moduleName = "WeatherUnderground";
     var langFile = self.controller.loadModuleLang(moduleName);
-    var url = "http://api.wunderground.com/api/"+self.config.api_key+"/conditions/forecast/q/"+self.config.location+".json";
+    var url = "http://api.wunderground.com/api/"+self.config.api_key+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
     
     http.request({
         url: url,
@@ -129,6 +129,25 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
 WeatherUnderground.prototype.processResponse = function(instance,response) {
     var self = instance;
     var current = response.data.current_observation;
+    var astronomy = response.data.astronomy;
+    var currentdate = new Date();
+    var daynight = (
+            astronomy.current_time.hour > astronomy.sunrise.hour 
+            || 
+            (
+                astronomy.current_time.hour === astronomy.sunrise.hour 
+                && astronomy.current_time.minute > austronomy.sunrise.minute
+            )
+        ) 
+        &&
+        (
+            astronomy.current_time.hour < astronomy.sunset.hour 
+            || 
+            (
+                astronomy.current_time.hour === astronomy.sunset.hour 
+                && astronomy.current_time.minute < austronomy.sunset.minute
+            )
+        ) ? 'day':'night';
     
     console.logJS(response);
     self.devices.current.set("metrics:level", (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f));
@@ -166,7 +185,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     data.forecast.X.
     
     
-    var temp = Math.round((self.config.units === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
+    var temp = Math.round((self.config.unit_temperature === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
         icon = "http://openweathermap.org/img/w/" + res.data.weather[0].icon + ".png";
 
     self.vDev.set("metrics:level", temp);
