@@ -50,6 +50,20 @@ WeatherUnderground.prototype.init = function (config) {
             }
         },
     });
+    
+    this.addDevice('wind',{
+        defaults: {
+            metrics: {
+                probeTitle: 'Wind'
+            }
+        },
+        overlay: {
+            metrics: {
+                scaleTitle: config.unit_system === "metric" ? 'km/h' : 'mph',
+                title: "Wind"
+            }
+        },
+    });
 
     this.timer = setInterval(function() {
         self.fetchWeather(self);
@@ -116,8 +130,18 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     var self = instance;
     var current = response.data.current_observation;
     
-    self.devices.current.set("metrics:level", (self.config.units === "celsius" ? current.temp_c : current.temp_f));
-    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+current.icon+".gif");
+    console.logJS(response);
+    self.devices.current.set("metrics:level", (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f));
+    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight == 'night' ? 'ng_':'')+current.icon+".gif");
+    
+    self.devices.wind.set("metrics:icon", "");
+    self.devices.wind.set("metrics:level", (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:windgust", (self.config.unit_system === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
+    self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
+
+    //self.devices.wind.set("metrics:icon", (self.config.unit_system === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
+
+
 /*
     data.temp_f
     data.temp_c
