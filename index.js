@@ -38,25 +38,31 @@ WeatherUnderground.prototype.init = function (config) {
     this.devices = {};
     
     this.addDevice('current',{
-        defaults: {
+        overlay: {
             metrics: {
-                probeTitle: 'Temperature'
+                scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
+                title: "Condition"
+            }
+        },
+    });
+    
+    this.addDevice('humidity',{
+        defaults: {
+            deviceType: 'humidity',
+            metrics: {
+                icon: 'humidity.png',
+                title: "Humidity"
             }
         },
         overlay: {
             metrics: {
-                scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
-                title: "Current Condition"
+                icon: 'humidity',
+                scaleTitle: '%',
             }
         },
     });
     
     this.addDevice('wind',{
-        defaults: {
-            metrics: {
-                probeTitle: 'Wind'
-            }
-        },
         overlay: {
             metrics: {
                 scaleTitle: config.unit_system === "metric" ? 'km/h' : 'mph',
@@ -128,39 +134,58 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
 
 WeatherUnderground.prototype.processResponse = function(instance,response) {
     var self = instance;
+    console.logJS(response);
     var current = response.data.current_observation;
-    var astronomy = response.data.astronomy;
-    var currentdate = new Date();
+    var sun_phase = response.data.sun_phase;
+    var forecast = response.data.forecast.simpleforecast;
+    var current_date = new Date();
     var daynight = (
-            astronomy.current_time.hour > astronomy.sunrise.hour 
+            current_date.hour > sun_phase.sunrise.hour 
             || 
             (
-                astronomy.current_time.hour === astronomy.sunrise.hour 
-                && astronomy.current_time.minute > austronomy.sunrise.minute
+                current_date.hour === sun_phase.sunrise.hour 
+                && current_date.minute > austronomy.sun_phase.sunrise.minute
             )
         ) 
         &&
         (
-            astronomy.current_time.hour < astronomy.sunset.hour 
+                current_date.hour < sun_phase.sunset.hour 
             || 
             (
-                astronomy.current_time.hour === astronomy.sunset.hour 
-                && astronomy.current_time.minute < austronomy.sunset.minute
+                current_date.hour === sun_phase.sunset.hour 
+                && current_date.minute < sun_phase.sunset.minute
             )
         ) ? 'day':'night';
     
-    console.logJS(response);
-    self.devices.current.set("metrics:level", (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f));
-    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight == 'night' ? 'ng_':'')+current.icon+".gif");
     
-    self.devices.wind.set("metrics:icon", "");
+    // Handle current state
+    self.devices.current.set("metrics:level", (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f));
+    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight == 'night' ? 'nt_':'')+current.icon+".gif");
+    self.devices.current.set("metrics:pressure", (self.config.unit_system === "metric" ? current.pressure_mb : current.pressure_in));
+    self.devices.current.set("metrics:feelslike", (self.config.unit_temperature === "celsius" ? current.feelslike_c : current.feelslike_f));
+    self.devices.current.set("metrics:uv", current.uv);
+    self.devices.current.set("metrics:solarradiation", current.solarradiation);
+    //self.devices.current.set("metrics:icon", );
+    
+    // Handle humidity
+    self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
+    
+    // Handle wind
+    var wind = (current.wind_kph + current.wind_gust_kph) / 2;
+    var wind_level = 0;
+    if (wind >= 62) { // Beaufort 8
+        wind_level = 3;
+    } else if (wind >= 39) { // Beaufort 6
+        wind_level = 2;
+    } else if (wind >= 12) { // Beaufort 3
+        wind_level = 1;
+    }
+    self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+wind_level+".png");
     self.devices.wind.set("metrics:level", (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
     self.devices.wind.set("metrics:windgust", (self.config.unit_system === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
     self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
-
-    //self.devices.wind.set("metrics:icon", (self.config.unit_system === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
-
-
+    self.devices.wind.set("metrics:windlevel",wind_level);
+    
 /*
     data.temp_f
     data.temp_c
