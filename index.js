@@ -50,13 +50,12 @@ WeatherUnderground.prototype.init = function (config) {
         defaults: {
             deviceType: 'humidity',
             metrics: {
-                icon: 'humidity.png',
                 title: "Humidity"
             }
         },
         overlay: {
             metrics: {
-                icon: 'humidity',
+                icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
                 scaleTitle: '%',
             }
         },
