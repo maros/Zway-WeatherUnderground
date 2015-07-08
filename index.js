@@ -132,34 +132,39 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
 };
 
 WeatherUnderground.prototype.processResponse = function(instance,response) {
-    var self = instance;
-    console.logJS(response);
-    var current = response.data.current_observation;
-    var sun_phase = response.data.sun_phase;
-    var forecast = response.data.forecast.simpleforecast;
+    var self        = instance;
+    var current     = response.data.current_observation;
+    var forecast    = response.data.forecast.simpleforecast;
     var current_date = new Date();
+    var sunrise     = response.data.sun_phase.sunrise;
+    var sunset      = response.data.sun_phase.sunset;
+    sunset.hour     = parseInt(sunset.hour);
+    sunset.minute   = parseInt(sunset.minute);
+    sunrise.hour    = parseInt(sunrise.hour);
+    sunrise.minute  = parseInt(sunrise.minute);
+    
     var daynight = (
-            current_date.hour > sun_phase.sunrise.hour 
+            current_date.getHours() > sunrise.hour 
             || 
             (
-                current_date.hour === sun_phase.sunrise.hour 
-                && current_date.minute > austronomy.sun_phase.sunrise.minute
+                current_date.getHours() === sunrise.hour 
+                && current_date.getMinutes() > sunrise.minute
             )
         ) 
         &&
         (
-                current_date.hour < sun_phase.sunset.hour 
+            current_date.getHours() < sunset.hour 
             || 
             (
-                current_date.hour === sun_phase.sunset.hour 
-                && current_date.minute < sun_phase.sunset.minute
+                current_date.getHours() === sunset.hour 
+                && current_date.getMinutes() < sunset.minute
             )
         ) ? 'day':'night';
     
     
     // Handle current state
     self.devices.current.set("metrics:level", (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f));
-    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight == 'night' ? 'nt_':'')+current.icon+".gif");
+    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
     self.devices.current.set("metrics:pressure", (self.config.unit_system === "metric" ? current.pressure_mb : current.pressure_in));
     self.devices.current.set("metrics:feelslike", (self.config.unit_temperature === "celsius" ? current.feelslike_c : current.feelslike_f));
     self.devices.current.set("metrics:uv", current.uv);
@@ -170,7 +175,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
     
     // Handle wind
-    var wind = (current.wind_kph + current.wind_gust_kph) / 2;
+    var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
     var wind_level = 0;
     if (wind >= 62) { // Beaufort 8
         wind_level = 3;
