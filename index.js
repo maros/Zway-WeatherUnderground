@@ -234,16 +234,35 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     
     data.forecast.X.
     
+WeatherUnderground.prototype.transformCondition = function(condition) {
+    if (_.contains(["chanceflurries", "chancesleet", "chancesnow", "flurries","sleet","snow"], condition)) {
+        return 'snow';
+    } else if (_.contains(["chancetstorms", "chancerain", "rain" ,"tstorms","fog"], condition)) {
+        return 'poor';
+    } else if (_.contains(["cloudy", "mostlycloudy"], condition)) {
+        return 'neutral'
+    } else if (_.contains(["clear", "hazy", "mostlysunny", "partlysunny", "partlycloudy"], condition)) {
+        return 'fair';
+    }
     
-    var temp = Math.round((self.config.unit_temperature === "celsius" ? res.data.main.temp - 273.15 : res.data.main.temp * 1.8 - 459.67) * 10) / 10,
-        icon = "http://openweathermap.org/img/w/" + res.data.weather[0].icon + ".png";
-
-    self.vDev.set("metrics:level", temp);
-    self.vDev.set("metrics:icon", icon);
-} catch (e) {
-    self.controller.addNotification("error", langFile.err_parse, "module", moduleName);
-}
-**/
+    return 'unknown';
 };
+
+WeatherUnderground.prototype.averageSet = function(device,key,value,count) {
+    count = count || 3;
+    var list = device.get('metrics:'+key+'_list') || [];
+    list.unshift(value);
+    while (list.length > count) {
+        avg.pop();
+    }
+    var sum = _.reduce(list, function(i,j){ return i + j; }, 0);
+    var avg = sum / list.length;
+
+    device.set('metrics:'+key+'_list',list);
+    device.set('metrics:'+key+'_avg',avg);
+    
+    return avg;
+};
+
 
  
