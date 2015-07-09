@@ -140,6 +140,8 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
 };
 
 WeatherUnderground.prototype.processResponse = function(instance,response) {
+    console.log("WeatherUnderground update");
+    
     var self        = instance;
     var current     = response.data.current_observation;
     var current_date = new Date();
@@ -150,6 +152,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     sunset.minute   = parseInt(sunset.minute);
     sunrise.hour    = parseInt(sunrise.hour);
     sunrise.minute  = parseInt(sunrise.minute);
+    console.logJS(response.data);
     
     var daynight = (
             current_date.getHours() > sunrise.hour 
@@ -168,7 +171,6 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
                 && current_date.getMinutes() < sunset.minute
             )
         ) ? 'day':'night';
-    
     
     // Handle current state
     var current_temperature = (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f);
@@ -218,7 +220,6 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     } else if (wind >= 12) { // Beaufort 3
         wind_level = 1;
     }
-    self.devices.wind.set("metrics:title",langFile.wind + ' ' + current.wind_dir);
     self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+wind_level+".png");
     self.devices.wind.set("metrics:level", current.wind_dir + ' ' + (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
     self.devices.wind.set("metrics:wind", (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
@@ -226,29 +227,6 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
     self.devices.wind.set("metrics:windlevel",wind_level);
     self.averageSet(self.devices.wind,'wind',wind);
-    
-/*
-    data.temp_f
-    data.temp_c
-    data.relative_humidity
-    data.wind_mph": 22.0,
-    data.wind_gust_mph": "28.0",
-    data.wind_kph": 35.4,
-    data.wind_gust_kph": "45.1",
-    
-    data.solarradiation
-    data.UV
-    data.weather
-    data.icon
-    data.precip_1hr_metric
-    data.precip_1hr_in
-    
-    data.pressure_mb
-    data.pressure_in
-    
-    data.observation_location.city
-    
-    data.forecast.X.
     
 };
 
