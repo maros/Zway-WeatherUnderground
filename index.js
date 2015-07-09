@@ -171,13 +171,26 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     
     
     // Handle current state
-    self.devices.current.set("metrics:level", (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f));
+    var current_temperature = (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f);
+    var current_high        = (self.config.unit_temperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
+    var current_low         = (self.config.unit_temperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
+    self.devices.current.set("metrics:conditiongroup",this.transformCondition(current.icon));
+    self.devices.current.set("metrics:condition",current.icon);
+    //self.devices.current.set("metrics:title",current.weather);
+    self.devices.current.set("metrics:level",current_temperature);
+    self.devices.current.set("metrics:temperature",current_temperature);
     self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
     self.devices.current.set("metrics:pressure", (self.config.unit_system === "metric" ? current.pressure_mb : current.pressure_in));
     self.devices.current.set("metrics:feelslike", (self.config.unit_temperature === "celsius" ? current.feelslike_c : current.feelslike_f));
-    self.devices.current.set("metrics:uv", current.uv);
-    self.devices.current.set("metrics:solarradiation", current.solarradiation);
-    //self.devices.current.set("metrics:icon", );
+    self.devices.current.set("metrics:uv",current.uv);
+    self.devices.current.set("metrics:solarradiation",current.solarradiation);
+    self.devices.current.set("metrics:weather",current.weather);
+    self.devices.current.set("metrics:pop",forecast[0].pop);
+    self.devices.current.set("metrics:high",current_high);
+    self.devices.current.set("metrics:low",current_low);
+    
+    self.averageSet(self.devices.current,'uv',current.uv);
+    self.averageSet(self.devices.current,'solarradiation',current.solarradiation);
     
     // Handle forecast
     var forecast_high = (self.config.unit_temperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
@@ -205,11 +218,14 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     } else if (wind >= 12) { // Beaufort 3
         wind_level = 1;
     }
+    self.devices.wind.set("metrics:title",langFile.wind + ' ' + current.wind_dir);
     self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+wind_level+".png");
-    self.devices.wind.set("metrics:level", (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:level", current.wind_dir + ' ' + (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:wind", (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
     self.devices.wind.set("metrics:windgust", (self.config.unit_system === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
     self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
     self.devices.wind.set("metrics:windlevel",wind_level);
+    self.averageSet(self.devices.wind,'wind',wind);
     
 /*
     data.temp_f
@@ -234,6 +250,8 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     
     data.forecast.X.
     
+};
+
 WeatherUnderground.prototype.transformCondition = function(condition) {
     if (_.contains(["chanceflurries", "chancesleet", "chancesnow", "flurries","sleet","snow"], condition)) {
         return 'snow';
