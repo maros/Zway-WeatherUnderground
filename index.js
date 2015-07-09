@@ -68,7 +68,16 @@ WeatherUnderground.prototype.init = function (config) {
             }
         },
     });
-
+    
+    this.addDevice('forecast',{
+        overlay: {
+            metrics: {
+                scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
+                title: langFile.forecast
+            }
+        },
+    });
+    
     this.timer = setInterval(function() {
         self.fetchWeather(self);
     }, 3600*1000);
@@ -133,10 +142,10 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
 WeatherUnderground.prototype.processResponse = function(instance,response) {
     var self        = instance;
     var current     = response.data.current_observation;
-    var forecast    = response.data.forecast.simpleforecast;
     var current_date = new Date();
     var sunrise     = response.data.sun_phase.sunrise;
     var sunset      = response.data.sun_phase.sunset;
+    var forecast    = response.data.forecast.simpleforecast.forecastday;
     sunset.hour     = parseInt(sunset.hour);
     sunset.minute   = parseInt(sunset.minute);
     sunrise.hour    = parseInt(sunrise.hour);
@@ -169,6 +178,19 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:uv", current.uv);
     self.devices.current.set("metrics:solarradiation", current.solarradiation);
     //self.devices.current.set("metrics:icon", );
+    
+    // Handle forecast
+    var forecast_high = (self.config.unit_temperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
+    var forecast_low = (self.config.unit_temperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
+    self.devices.forecast.set("metrics:conditiongroup",this.transformCondition(forecast[1].icon));
+    self.devices.forecast.set("metrics:condition",forecast[1].icon);
+    //self.devices.current.set("metrics:title",forecast[1].weather);
+    self.devices.forecast.set("metrics:level", forecast_low + ' - ' + forecast_high);
+    self.devices.forecast.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+forecast[1].icon+".gif");
+    self.devices.forecast.set("metrics:pop",forecast[1].pop);
+    self.devices.forecast.set("metrics:weather",forecast[1].conditions);
+    self.devices.forecast.set("metrics:high",forecast_high);
+    self.devices.forecast.set("metrics:low",forecast_low);
     
     // Handle humidity
     self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
