@@ -7,5 +7,10 @@
   "unit_temperature": "Temperature Units",
   "unit_system": "Unit System",
   "unit_system_metric": "Metric",
-  "unit_system_imperial": "Imperial"
+  "unit_system_imperial": "Imperial",
+  "wind": "Wind",
+  "forecast": "Forecast",
+  "humidity": "Humidity",
+  "current": "Current condition"
+  
 }

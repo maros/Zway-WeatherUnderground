@@ -35,28 +35,27 @@ WeatherUnderground.prototype.init = function (config) {
     this.location = config.location.toString();
     this.unit_temperature = config.unit_temperature.toString();
     this.unit_system = config.unit_system.toString();
+    var langFile = self.controller.loadModuleLang("WeatherUnderground");
     this.devices = {};
     
     this.addDevice('current',{
         overlay: {
             metrics: {
                 scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
-                title: "Condition"
+                title: langFile.current
             }
         },
     });
     
     this.addDevice('humidity',{
         defaults: {
-            deviceType: 'humidity',
-            metrics: {
-                title: "Humidity"
-            }
+            deviceType: 'humidity'
         },
         overlay: {
             metrics: {
                 icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
                 scaleTitle: '%',
+                title: langFile.humidity
             }
         },
     });
@@ -65,7 +64,7 @@ WeatherUnderground.prototype.init = function (config) {
         overlay: {
             metrics: {
                 scaleTitle: config.unit_system === "metric" ? 'km/h' : 'mph',
-                title: "Wind"
+                title: langFile.wind
             }
         },
     });
