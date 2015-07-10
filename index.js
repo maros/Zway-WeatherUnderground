@@ -201,7 +201,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.forecast.set("metrics:condition",forecast[1].icon);
     //self.devices.current.set("metrics:title",forecast[1].weather);
     self.devices.forecast.set("metrics:level", forecast_low + ' - ' + forecast_high);
-    self.devices.forecast.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+forecast[1].icon+".gif");
+    self.devices.forecast.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+forecast[1].icon+".gif");
     self.devices.forecast.set("metrics:pop",forecast[1].pop);
     self.devices.forecast.set("metrics:weather",forecast[1].conditions);
     self.devices.forecast.set("metrics:high",forecast_high);
