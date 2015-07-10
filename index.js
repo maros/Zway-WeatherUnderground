@@ -9,7 +9,6 @@ Description:
 
 ******************************************************************************/
 
-
 function WeatherUnderground (id, controller) {
     // Call superconstructor first (AutomationModule)
     WeatherUnderground.super_.call(this, id, controller);
@@ -26,7 +25,7 @@ _module = WeatherUnderground;
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
 
-    executeFile("lib/underscore_deep_extend.js");
+    executeFile("modules/WeatherUnderground/underscore_deep_extend.js");
 
     var self = this;
     
