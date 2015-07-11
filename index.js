@@ -248,7 +248,7 @@ WeatherUnderground.prototype.averageSet = function(device,key,value,count) {
     var list = device.get('metrics:'+key+'_list') || [];
     list.unshift(value);
     while (list.length > count) {
-        avg.pop();
+        list.pop();
     }
     var sum = _.reduce(list, function(i,j){ return i + j; }, 0);
     var avg = sum / list.length;
