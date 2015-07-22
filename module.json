@@ -23,8 +23,7 @@
         "type": "object",
         "properties": {
             "location": {
-                "type": "string",
-                "helper": "__location_helper__"
+                "type": "string"
             },
             "unit_temperature": {
                 "type": "select",
@@ -46,7 +45,8 @@
     "options": {
         "fields": {
             "location": {
-                "label": "__location__"
+                "label": "__location__",
+                "helper": "__location_helper__"
             },
             "unit_temperature": {
                 "label": "__unit_temperature__",
