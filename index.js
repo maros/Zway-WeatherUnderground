@@ -65,7 +65,7 @@ WeatherUnderground.prototype.init = function (config) {
                 scaleTitle: config.unit_system === "metric" ? 'km/h' : 'mph',
                 title: langFile.wind
             }
-        },
+        }
     });
     
     this.addDevice('forecast',{
@@ -74,7 +74,7 @@ WeatherUnderground.prototype.init = function (config) {
                 scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
                 title: langFile.forecast
             }
-        },
+        }
     });
     
     this.timer = setInterval(function() {
