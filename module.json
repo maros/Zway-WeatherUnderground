@@ -16,9 +16,9 @@
         "title": "__title__",
         "description": "__description__",
         "location": "autoip",
-        "api_key": "",
-        "unit_temperature": "celsius",
-        "unit_system": "metric"
+        "apiKey": "",
+        "unitTemperature": "celsius",
+        "unitSystem": "metric"
     },
     "schema": {
         "type": "object",
@@ -26,17 +26,17 @@
             "location": {
                 "type": "string"
             },
-            "unit_temperature": {
+            "unitTemperature": {
                 "type": "select",
                 "enum": ["celsius", "fahrenheit"],
                 "required": true
             },
-            "unit_system": {
+            "unitSystem": {
                 "type": "select",
                 "enum": ["metric", "imperial"],
                 "required": true
             },
-            "api_key": {
+            "apiKey": {
                 "type": "string",
                 "required": true
             }
@@ -49,15 +49,15 @@
                 "label": "__location__",
                 "helper": "__location_helper__"
             },
-            "unit_temperature": {
+            "unitTemperature": {
                 "label": "__unit_temperature__",
                 "optionLabels": ["°C", "°F"]
             },
-            "unit_system": {
+            "unitSystem": {
                 "label": "__unit_system__",
                 "optionLabels": ["__unit_system_metric__", "__unit_system_imperial__"]
             },
-            "api_key": {
+            "apiKey": {
                 "label": "__api_key__"
             }
         }

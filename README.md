@@ -1,8 +1,10 @@
 # Zway-WeatherUnderground
 
 Zway Automation module for fetching current condition and forecasts from the
-WeatherUnderground API. See http://www.wunderground.com/weather/api/d/docs
-for details.
+WeatherUnderground API. Creates virtual devices for humidity, current 
+conditions and forecasts.
+
+See http://www.wunderground.com/weather/api/d/docs for details.
 
 # Configuration
 
