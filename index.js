@@ -30,17 +30,17 @@ WeatherUnderground.prototype.init = function (config) {
     var self = this;
     
     this.location = config.location.toString();
-    this.api_key = config.api_key.toString();
+    this.apiKey = config.apiKey.toString();
     this.location = config.location.toString();
-    this.unit_temperature = config.unit_temperature.toString();
-    this.unit_system = config.unit_system.toString();
+    this.unitTemperature = config.unitTemperature.toString();
+    this.unitSystem = config.unitSystem.toString();
     var langFile = self.controller.loadModuleLang("WeatherUnderground");
     this.devices = {};
     
     this.addDevice('current',{
         overlay: {
             metrics: {
-                scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
+                scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
                 title: langFile.current
             }
         },
@@ -62,7 +62,7 @@ WeatherUnderground.prototype.init = function (config) {
     this.addDevice('wind',{
         overlay: {
             metrics: {
-                scaleTitle: config.unit_system === "metric" ? 'km/h' : 'mph',
+                scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
                 title: langFile.wind
             }
         }
@@ -71,7 +71,7 @@ WeatherUnderground.prototype.init = function (config) {
     this.addDevice('forecast',{
         overlay: {
             metrics: {
-                scaleTitle: config.unit_temperature === "celsius" ? '°C' : '°F',
+                scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
                 title: langFile.forecast
             }
         }
@@ -103,19 +103,19 @@ WeatherUnderground.prototype.stop = function () {
 WeatherUnderground.prototype.addDevice = function(prefix,params) {
     var self = this;
     
-    var device_params = _.deepExtend(
+    var deviceParams = _.deepExtend(
         params,
         {
             deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
             defaults: {
-                deviceType: "sensorMultilevel",
+                deviceType: "sensorMultilevel"
             },
             overlay: {},
             moduleId: prefix+"_"+this.id
         }
     );
     
-    this.devices[prefix] = self.controller.devices.create(device_params);
+    this.devices[prefix] = self.controller.devices.create(deviceParams);
 };
 
 // ----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
     var self = instance,
         moduleName = "WeatherUnderground";
     var langFile = self.controller.loadModuleLang(moduleName);
-    var url = "http://api.wunderground.com/api/"+self.config.api_key+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
+    var url = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
     
     http.request({
         url: url,
@@ -143,7 +143,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     
     var self        = instance;
     var current     = response.data.current_observation;
-    var current_date = new Date();
+    var currentDate = new Date();
     var sunrise     = response.data.sun_phase.sunrise;
     var sunset      = response.data.sun_phase.sunset;
     var forecast    = response.data.forecast.simpleforecast.forecastday;
@@ -154,77 +154,77 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     console.logJS(response.data);
     
     var daynight = (
-            current_date.getHours() > sunrise.hour 
+            currentDate.getHours() > sunrise.hour 
             || 
             (
-                current_date.getHours() === sunrise.hour 
-                && current_date.getMinutes() > sunrise.minute
+                currentDate.getHours() === sunrise.hour 
+                && currentDate.getMinutes() > sunrise.minute
             )
         ) 
         &&
         (
-            current_date.getHours() < sunset.hour 
+            currentDate.getHours() < sunset.hour 
             || 
             (
-                current_date.getHours() === sunset.hour 
-                && current_date.getMinutes() < sunset.minute
+                currentDate.getHours() === sunset.hour 
+                && currentDate.getMinutes() < sunset.minute
             )
         ) ? 'day':'night';
     
     // Handle current state
-    var current_temperature = (self.config.unit_temperature === "celsius" ? current.temp_c : current.temp_f);
-    var current_high        = (self.config.unit_temperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
-    var current_low         = (self.config.unit_temperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
+    var currentTemperature = (self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
+    var currentHigh        = (self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
+    var currentLow         = (self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
     self.devices.current.set("metrics:conditiongroup",this.transformCondition(current.icon));
     self.devices.current.set("metrics:condition",current.icon);
     //self.devices.current.set("metrics:title",current.weather);
-    self.devices.current.set("metrics:level",current_temperature);
-    self.devices.current.set("metrics:temperature",current_temperature);
+    self.devices.current.set("metrics:level",currentTemperature);
+    self.devices.current.set("metrics:temperature",currentTemperature);
     self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
-    self.devices.current.set("metrics:pressure", (self.config.unit_system === "metric" ? current.pressure_mb : current.pressure_in));
-    self.devices.current.set("metrics:feelslike", (self.config.unit_temperature === "celsius" ? current.feelslike_c : current.feelslike_f));
+    self.devices.current.set("metrics:pressure", (self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in));
+    self.devices.current.set("metrics:feelslike", (self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
     self.devices.current.set("metrics:uv",current.uv);
     self.devices.current.set("metrics:solarradiation",current.solarradiation);
     self.devices.current.set("metrics:weather",current.weather);
     self.devices.current.set("metrics:pop",forecast[0].pop);
-    self.devices.current.set("metrics:high",current_high);
-    self.devices.current.set("metrics:low",current_low);
+    self.devices.current.set("metrics:high",currentHigh);
+    self.devices.current.set("metrics:low",currentLow);
     
     self.averageSet(self.devices.current,'uv',current.uv);
     self.averageSet(self.devices.current,'solarradiation',current.solarradiation);
     
     // Handle forecast
-    var forecast_high = (self.config.unit_temperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
-    var forecast_low = (self.config.unit_temperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
+    var forecastHigh = (self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
+    var forecastLow = (self.config.unitTemperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
     self.devices.forecast.set("metrics:conditiongroup",this.transformCondition(forecast[1].icon));
     self.devices.forecast.set("metrics:condition",forecast[1].icon);
     //self.devices.current.set("metrics:title",forecast[1].weather);
-    self.devices.forecast.set("metrics:level", forecast_low + ' - ' + forecast_high);
+    self.devices.forecast.set("metrics:level", forecastLow + ' - ' + forecastHigh);
     self.devices.forecast.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+forecast[1].icon+".gif");
     self.devices.forecast.set("metrics:pop",forecast[1].pop);
     self.devices.forecast.set("metrics:weather",forecast[1].conditions);
-    self.devices.forecast.set("metrics:high",forecast_high);
-    self.devices.forecast.set("metrics:low",forecast_low);
+    self.devices.forecast.set("metrics:high",forecastHigh);
+    self.devices.forecast.set("metrics:low",forecastLow);
     
     // Handle humidity
     self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
     
     // Handle wind
     var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
-    var wind_level = 0;
+    var windLevel = 0;
     if (wind >= 62) { // Beaufort 8
-        wind_level = 3;
+        windLevel = 3;
     } else if (wind >= 39) { // Beaufort 6
-        wind_level = 2;
+        windLevel = 2;
     } else if (wind >= 12) { // Beaufort 3
-        wind_level = 1;
+        windLevel = 1;
     }
-    self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+wind_level+".png");
-    self.devices.wind.set("metrics:level", current.wind_dir + ' ' + (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
-    self.devices.wind.set("metrics:wind", (self.config.unit_system === "metric" ? current.wind_kph : current.wind_mph));
-    self.devices.wind.set("metrics:windgust", (self.config.unit_system === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
+    self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+windLevel+".png");
+    self.devices.wind.set("metrics:level", current.wind_dir + ' ' + (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:wind", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:windgust", (self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
     self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
-    self.devices.wind.set("metrics:windlevel",wind_level);
+    self.devices.wind.set("metrics:windlevel",windLevel);
     self.averageSet(self.devices.wind,'wind',wind);
     
 };
