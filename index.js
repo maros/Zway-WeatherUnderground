@@ -107,7 +107,7 @@ WeatherUnderground.prototype.addDevice = function(prefix,params) {
         params,
         {
             deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
-            defaults: {
+            overlay: {
                 deviceType: "sensorMultilevel"
             },
             overlay: {},
