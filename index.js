@@ -47,10 +47,8 @@ WeatherUnderground.prototype.init = function (config) {
     });
     
     this.addDevice('humidity',{
-        defaults: {
-            deviceType: 'humidity'
-        },
         overlay: {
+            deviceType : 'humidity',
             metrics: {
                 icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
                 scaleTitle: '%',
@@ -110,7 +108,6 @@ WeatherUnderground.prototype.addDevice = function(prefix,params) {
             overlay: {
                 deviceType: "sensorMultilevel"
             },
-            overlay: {},
             moduleId: prefix+"_"+this.id
         }
     );
