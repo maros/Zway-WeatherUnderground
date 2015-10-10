@@ -82,20 +82,20 @@ WeatherUnderground.prototype.init = function (config) {
 };
 
 WeatherUnderground.prototype.stop = function () {
-    WeatherUnderground.super_.prototype.stop.call(this);
-    
     var self = this;
     
     if (this.timer) {
         clearInterval(this.timer);
     }
-
+    
     if (typeof this.devices !== 'undefined') {
         _.each(this.devices,function(value, key, list) {
             self.controller.devices.remove(value.id);
         });
         this.devices = {};
     }
+    
+    WeatherUnderground.super_.prototype.stop.call(this);
 };
 
 WeatherUnderground.prototype.addDevice = function(prefix,params) {
@@ -148,7 +148,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     sunset.minute   = parseInt(sunset.minute);
     sunrise.hour    = parseInt(sunrise.hour);
     sunrise.minute  = parseInt(sunrise.minute);
-    console.logJS(response.data);
+    //console.logJS(response.data);
     
     var daynight = (
             currentDate.getHours() > sunrise.hour 
