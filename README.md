@@ -66,7 +66,7 @@ range.
 
 ## Wind
 
-Displays the current wind speed.
+Displays the current wind speed. Wind level is indicated by the icon.
 
 *    metrics:low: expected low temperature today
 *    metrics:wind: Wind speed
