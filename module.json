@@ -18,7 +18,8 @@
         "location": "autoip",
         "apiKey": "",
         "unitTemperature": "celsius",
-        "unitSystem": "metric"
+        "unitSystem": "metric",
+        "interval": 60
     },
     "schema": {
         "type": "object",
@@ -38,6 +39,10 @@
             },
             "apiKey": {
                 "type": "string",
+                "required": true
+            },
+            "interval" : {
+                "type": "number",
                 "required": true
             }
         },
@@ -59,6 +64,10 @@
             },
             "apiKey": {
                 "label": "__api_key__"
+            },
+            "interval" : {
+                "label" : "__interval_label__",
+                "helper" : "__interval_helper__"
             }
         }
     }

@@ -11,6 +11,8 @@
   "wind": "Wind",
   "forecast": "Forecast",
   "humidity": "Humidity",
-  "current": "Current condition"
+  "current": "Current condition",
+  "interval_label": "Refresh interval",
+  "interval_helper": "Specifies weather data refresh interval in minutes"
   
 }

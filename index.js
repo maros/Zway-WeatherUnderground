@@ -80,7 +80,7 @@ WeatherUnderground.prototype.init = function (config) {
     
     this.timer = setInterval(function() {
         self.fetchWeather(self);
-    }, 3600*1000);
+    }, (parseInt(self.config.interval)* 60 * 1000));
     self.fetchWeather(self);
 };
 
