@@ -51,6 +51,7 @@ Additionally the following metrics are set
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
 *    metrics:low: expected low temperature today
+*    metrics:raw: raw current conditions data returned by the API
 
 ## Forecast
 
@@ -63,6 +64,7 @@ range.
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
 *    metrics:low: expected low temperature today
+*    metrics:raw: raw forecast data returned by the API
 
 ## Wind
 

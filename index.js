@@ -189,6 +189,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:pop",forecast[0].pop);
     self.devices.current.set("metrics:high",currentHigh);
     self.devices.current.set("metrics:low",currentLow);
+    self.devices.current.set("metrics:raw",current);
     
     self.averageSet(self.devices.current,'uv',current.uv);
     self.averageSet(self.devices.current,'solarradiation',current.solarradiation);
@@ -205,6 +206,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.forecast.set("metrics:weather",forecast[1].conditions);
     self.devices.forecast.set("metrics:high",forecastHigh);
     self.devices.forecast.set("metrics:low",forecastLow);
+    self.devices.forecast.set("metrics:raw",forecast);
     
     // Handle humidity
     self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
