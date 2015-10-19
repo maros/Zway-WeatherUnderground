@@ -12,6 +12,13 @@ Description:
 function WeatherUnderground (id, controller) {
     // Call superconstructor first (AutomationModule)
     WeatherUnderground.super_.call(this, id, controller);
+    
+    this.location           = undefined;
+    this.apiKey             = undefined;
+    this.unitTemperature    = undefined;
+    this.unitSystem         = undefined;
+    this.timer              = undefined;
+    this.devices            = {};
 }
 
 inherits(WeatherUnderground, AutomationModule);
@@ -29,13 +36,11 @@ WeatherUnderground.prototype.init = function (config) {
 
     var self = this;
     
-    this.location = config.location.toString();
-    this.apiKey = config.apiKey.toString();
-    this.location = config.location.toString();
-    this.unitTemperature = config.unitTemperature.toString();
-    this.unitSystem = config.unitSystem.toString();
-    var langFile = self.controller.loadModuleLang("WeatherUnderground");
-    this.devices = {};
+    this.location           = config.location.toString();
+    this.apiKey             = config.apiKey.toString();
+    this.unitTemperature    = config.unitTemperature.toString();
+    this.unitSystem         = config.unitSystem.toString();
+    var langFile            = self.controller.loadModuleLang("WeatherUnderground");
     
     this.addDevice('current',{
         overlay: {
@@ -78,9 +83,11 @@ WeatherUnderground.prototype.init = function (config) {
         }
     });
     
+    // TODO check last update time and do not re-fetch if recent
     this.timer = setInterval(function() {
         self.fetchWeather(self);
     }, (parseInt(self.config.interval)* 60 * 1000));
+    
     self.fetchWeather(self);
 };
 
@@ -89,10 +96,11 @@ WeatherUnderground.prototype.stop = function () {
     
     if (this.timer) {
         clearInterval(this.timer);
+        this.timer = undefined;
     }
     
     if (typeof this.devices !== 'undefined') {
-        _.each(this.devices,function(value, key, list) {
+        _.each(this.devices,function(value, key) {
             self.controller.devices.remove(value.id);
         });
         this.devices = {};
@@ -132,14 +140,16 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
         url: url,
         async: true,
         success: function(response) { self.processResponse(instance,response) },
-        error: function() {
+        error: function(response) {
+            console.error("[WeatherUnderground] Update error");
+            console.logJS(response);
             self.controller.addNotification("error", langFile.err_fetch, "module", moduleName);
         }
     });
 };
 
 WeatherUnderground.prototype.processResponse = function(instance,response) {
-    console.log("WeatherUnderground update");
+    console.log("[WeatherUnderground] Update");
     
     var self        = instance;
     var current     = response.data.current_observation;
