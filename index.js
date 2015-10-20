@@ -81,16 +81,16 @@ WeatherUnderground.prototype.init = function (config) {
 WeatherUnderground.prototype.stop = function () {
     var self = this;
     
-    if (this.timer) {
-        clearInterval(this.timer);
-        this.timer = undefined;
+    if (self.timer) {
+        clearInterval(self.timer);
+        self.timer = undefined;
     }
     
-    if (typeof this.devices !== 'undefined') {
-        _.each(this.devices,function(value, key) {
+    if (typeof self.devices !== 'undefined') {
+        _.each(self.devices,function(value, key) {
             self.controller.devices.remove(value.id);
         });
-        this.devices = {};
+        self.devices = {};
     }
     
     WeatherUnderground.super_.prototype.stop.call(this);
