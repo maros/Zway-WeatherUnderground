@@ -32,8 +32,6 @@ _module = WeatherUnderground;
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
 
-    executeFile("modules/WeatherUnderground/underscore_deep_extend.js");
-
     var self = this;
     
     this.location           = config.location.toString();
@@ -42,45 +40,29 @@ WeatherUnderground.prototype.init = function (config) {
     this.unitSystem         = config.unitSystem.toString();
     var langFile            = self.controller.loadModuleLang("WeatherUnderground");
     
-    this.addDevice('current',{
-        overlay: {
-            metrics: {
-                probeTitle: 'weather_current',
-                scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
-                title: langFile.current
-            }
-        },
+    self.addDevice('current',{
+        probeTitle: 'weather_current',
+        scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
+        title: langFile.current
     });
     
-    this.addDevice('humidity',{
-        overlay: {
-            metrics: {
-                probeTitle: 'humidity',
-                icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
-                scaleTitle: '%',
-                title: langFile.humidity
-            }
-        },
+    self.addDevice('humidity',{
+        probeTitle: 'humidity',
+        icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
+        scaleTitle: '%',
+        title: langFile.humidity
     });
     
-    this.addDevice('wind',{
-        overlay: {
-            metrics: {
-                probeTitle: 'weather_wind',
-                scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
-                title: langFile.wind
-            }
-        }
+    self.addDevice('wind',{
+        probeTitle: 'weather_wind',
+        scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
+        title: langFile.wind
     });
     
-    this.addDevice('forecast',{
-        overlay: {
-            metrics: {
-                probeTitle: 'weather_forecast',
-                scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
-                title: langFile.forecast
-            }
-        }
+    self.addDevice('forecast',{
+        probeTitle: 'weather_forecast',
+        scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
+        title: langFile.forecast
     });
     
     // TODO check last update time and do not re-fetch if recent
@@ -109,21 +91,18 @@ WeatherUnderground.prototype.stop = function () {
     WeatherUnderground.super_.prototype.stop.call(this);
 };
 
-WeatherUnderground.prototype.addDevice = function(prefix,params) {
+WeatherUnderground.prototype.addDevice = function(prefix,overlay) {
     var self = this;
     
-    var deviceParams = _.deepExtend(
-        params,
-        {
-            deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
-            overlay: {
-                deviceType: "sensorMultilevel"
-            },
-            moduleId: prefix+"_"+this.id
-        }
-    );
+    var deviceParams = {
+        overlay: overlay,
+        deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
+        moduleId: prefix+"_"+this.id
+    };
+    deviceParams.overlay['deviceType'] = "sensorMultilevel";
     
-    this.devices[prefix] = self.controller.devices.create(deviceParams);
+    self.devices[prefix] = self.controller.devices.create(deviceParams);
+    return self.devices[prefix];
 };
 
 // ----------------------------------------------------------------------------
