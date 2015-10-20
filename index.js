@@ -65,12 +65,17 @@ WeatherUnderground.prototype.init = function (config) {
         title: langFile.forecast
     });
     
-    // TODO check last update time and do not re-fetch if recent
-    this.timer = setInterval(function() {
-        self.fetchWeather(self);
-    }, (parseInt(self.config.interval)* 60 * 1000));
+    var currentTime     = (new Date()).getTime();
+    var updateTime      = self.devices['current'].get('updateTime');
+    var intervalTime    = parseInt(self.config.interval) * 60 * 1000;
     
-    self.fetchWeather(self);
+    self.timer = setInterval(function() {
+        self.fetchWeather(self);
+    }, intervalTime);
+    
+    if ((updateTime + intervalTime / 3) < currentTime) {
+        self.fetchWeather(self);
+    }
 };
 
 WeatherUnderground.prototype.stop = function () {
