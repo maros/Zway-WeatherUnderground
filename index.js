@@ -66,13 +66,14 @@ WeatherUnderground.prototype.init = function (config) {
     });
     
     var currentTime     = (new Date()).getTime();
-    var updateTime      = self.devices['current'].get('updateTime');
+    var updateTime      = self.devices['current'].get('updateTime') * 1000;
     var intervalTime    = parseInt(self.config.interval) * 60 * 1000;
     
     self.timer = setInterval(function() {
         self.fetchWeather(self);
     }, intervalTime);
     
+    console.log('[WeatherUnderground] Last update time '+updateTime);
     if ((updateTime + intervalTime / 3) < currentTime) {
         self.fetchWeather(self);
     }
