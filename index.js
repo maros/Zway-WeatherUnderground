@@ -229,9 +229,9 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
 WeatherUnderground.prototype.transformCondition = function(condition) {
     if (_.contains(["chanceflurries", "chancesleet", "chancesnow", "flurries","sleet","snow"], condition)) {
         return 'snow';
-    } else if (_.contains(["chancetstorms", "chancerain", "rain" ,"tstorms","fog"], condition)) {
+    } else if (_.contains(["chancetstorms", "chancerain", "rain" ,"tstorms"], condition)) {
         return 'poor';
-    } else if (_.contains(["cloudy", "mostlycloudy"], condition)) {
+    } else if (_.contains(["cloudy", "mostlycloudy","fog"], condition)) {
         return 'neutral'
     } else if (_.contains(["clear", "hazy", "mostlysunny", "partlysunny", "partlycloudy"], condition)) {
         return 'fair';
