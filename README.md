@@ -88,7 +88,7 @@ No events are emitted
 
 ```shell
 cd /opt/z-way-server/automation/modules
-git clone git@github.com:maros/Zway-WeatherUnderground.git WeatherUnderground --branch latest
+git clone https://github.com/maros/Zway-WeatherUnderground.git WeatherUnderground --branch latest
 ```
 
 To update or install a specific version
