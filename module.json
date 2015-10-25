@@ -1,74 +1,86 @@
 {
-    "dependencies": [],
-    "singleton": true,
-    "category": "environment",
-    "author": "Maroš Kollár",
-    "homepage": "http://k-1.com",
-    "icon": "icon.png",
-    "version": "1.00",
-    "maturity": "stable",
-    "moduleName": "WeatherUnderground",
-    "repository": {
-        "type": "git",
-        "source": "https://github.com/maros/Zway-WeatherUnderground"
-    },
-    "defaults": {
-        "title": "__title__",
-        "description": "__description__",
-        "location": "autoip",
-        "apiKey": "",
-        "unitTemperature": "celsius",
-        "unitSystem": "metric",
-        "interval": 60
-    },
-    "schema": {
-        "type": "object",
-        "properties": {
-            "location": {
-                "type": "string"
-            },
-            "unitTemperature": {
-                "type": "select",
-                "enum": ["celsius", "fahrenheit"],
-                "required": true
-            },
-            "unitSystem": {
-                "type": "select",
-                "enum": ["metric", "imperial"],
-                "required": true
-            },
-            "apiKey": {
-                "type": "string",
-                "required": true
-            },
-            "interval" : {
-                "type": "number",
-                "required": true
-            }
-        },
-        "required": true
-    },
-    "options": {
-        "fields": {
-            "location": {
-                "label": "__location__",
-                "helper": "__location_helper__"
-            },
-            "unitTemperature": {
-                "label": "__unit_temperature__",
-                "optionLabels": ["°C", "°F"]
-            },
-            "unitSystem": {
-                "label": "__unit_system__",
-                "optionLabels": ["__unit_system_metric__", "__unit_system_imperial__"]
-            },
-            "apiKey": {
-                "label": "__api_key__"
-            },
-            "interval" : {
-                "label" : "__interval_label__",
-                "helper" : "__interval_helper__"
-            }
-        }
-    }
+   "author" : "Maroš Kollár",
+   "category" : "environment",
+   "defaults" : {
+      "apiKey" : "",
+      "description" : "__description__",
+      "interval" : 60,
+      "location" : "autoip",
+      "title" : "__title__",
+      "unitSystem" : "metric",
+      "unitTemperature" : "celsius"
+   },
+   "dependencies" : [],
+   "homepage" : "http://k-1.com",
+   "icon" : "icon.png",
+   "maturity" : "stable",
+   "moduleName" : "WeatherUnderground",
+   "options" : {
+      "fields" : {
+         "apiKey" : {
+            "label" : "__api_key__"
+         },
+         "interval" : {
+            "helper" : "__interval_helper__",
+            "label" : "__interval_label__"
+         },
+         "location" : {
+            "helper" : "__location_helper__",
+            "label" : "__location__"
+         },
+         "unitSystem" : {
+            "label" : "__unit_system__",
+            "optionLabels" : [
+               "__unit_system_metric__",
+               "__unit_system_imperial__"
+            ]
+         },
+         "unitTemperature" : {
+            "label" : "__unit_temperature__",
+            "optionLabels" : [
+               "°C",
+               "°F"
+            ]
+         }
+      }
+   },
+   "repository" : {
+      "source" : "https://github.com/maros/Zway-WeatherUnderground",
+      "type" : "git"
+   },
+   "schema" : {
+      "properties" : {
+         "apiKey" : {
+            "required" : true,
+            "type" : "string"
+         },
+         "interval" : {
+            "required" : true,
+            "type" : "number"
+         },
+         "location" : {
+            "type" : "string"
+         },
+         "unitSystem" : {
+            "enum" : [
+               "metric",
+               "imperial"
+            ],
+            "required" : true,
+            "type" : "select"
+         },
+         "unitTemperature" : {
+            "enum" : [
+               "celsius",
+               "fahrenheit"
+            ],
+            "required" : true,
+            "type" : "select"
+         }
+      },
+      "required" : true,
+      "type" : "object"
+   },
+   "singleton" : true,
+   "version" : "1.01"
 }
