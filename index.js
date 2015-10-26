@@ -38,31 +38,31 @@ WeatherUnderground.prototype.init = function (config) {
     this.apiKey             = config.apiKey.toString();
     this.unitTemperature    = config.unitTemperature.toString();
     this.unitSystem         = config.unitSystem.toString();
-    var langFile            = self.controller.loadModuleLang("WeatherUnderground");
+    this.langFile           = self.controller.loadModuleLang("WeatherUnderground");
     
     self.addDevice('current',{
         probeTitle: 'weather_current',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
-        title: langFile.current
+        title: self.langFile.current
     });
     
     self.addDevice('humidity',{
         probeTitle: 'humidity',
         icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
         scaleTitle: '%',
-        title: langFile.humidity
+        title: self.langFile.humidity
     });
     
     self.addDevice('wind',{
         probeTitle: 'weather_wind',
         scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
-        title: langFile.wind
+        title: self.langFile.wind
     });
     
     self.addDevice('forecast',{
         probeTitle: 'weather_forecast',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
-        title: langFile.forecast
+        title: self.langFile.forecast
     });
     
     var currentTime     = (new Date()).getTime();
@@ -116,9 +116,8 @@ WeatherUnderground.prototype.addDevice = function(prefix,overlay) {
 // ----------------------------------------------------------------------------
 
 WeatherUnderground.prototype.fetchWeather = function (instance) {
-    var self = instance,
-        moduleName = "WeatherUnderground";
-    var langFile = self.controller.loadModuleLang(moduleName);
+    var self = instance;
+    
     var url = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
     
     http.request({
@@ -128,7 +127,12 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
         error: function(response) {
             console.error("[WeatherUnderground] Update error");
             console.logJS(response);
-            self.controller.addNotification("error", langFile.err_fetch, "module", moduleName);
+            self.controller.addNotification(
+                "error", 
+                self.langFile.err_fetch, 
+                "module", 
+                "WeatherUnderground"
+            );
         }
     });
 };
