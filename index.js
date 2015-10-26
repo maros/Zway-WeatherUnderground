@@ -54,7 +54,7 @@ WeatherUnderground.prototype.init = function (config) {
     });
     
     self.addDevice('wind',{
-        probeTitle: 'weather_wind',
+        probeTitle: 'wind',
         scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
         title: self.langFile.wind
     });
