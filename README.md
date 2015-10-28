@@ -1,7 +1,7 @@
 # Zway-WeatherUnderground
 
 Zway Automation module for fetching current condition and forecasts from the
-WeatherUnderground API. Creates virtual devices for humidity, current 
+WeatherUnderground API. Creates virtual devices for humidity, wind, current 
 conditions and forecasts.
 
 See http://www.wunderground.com/weather/api/d/docs for details.
@@ -40,6 +40,7 @@ This module creates four virtual devices
 Displays the current condition as an icon and the current temperature. 
 Additionally the following metrics are set
 
+*    metrics:level Current temperature
 *    metrics:temperature
 *    metrics:condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
@@ -58,6 +59,7 @@ Additionally the following metrics are set
 Displays the forecasted condition as an icon, and the expected temperature 
 range.
 
+*    metrics:level Forecast temperature range
 *    metrics:condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
 *    metrics:weather: Current weather
@@ -70,8 +72,8 @@ range.
 
 Displays the current wind speed. Wind level is indicated by the icon.
 
-*    metrics:low: expected low temperature today
-*    metrics:wind: Wind speed
+*    metrics:level: Wind speed
+*    metrics:dir: Wind direction
 *    metrics:windgust: Wind gust speeds
 *    metrics:winddregrees: Wind degrees
 *    metrics:windlevel: Wind strength [0-3]
