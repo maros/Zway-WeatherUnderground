@@ -18,29 +18,34 @@
    "options" : {
       "fields" : {
          "apiKey" : {
-            "label" : "__api_key__"
+            "label" : "__api_key__",
+            "order": 2
          },
          "interval" : {
             "helper" : "__interval_helper__",
-            "label" : "__interval_label__"
+            "label" : "__interval_label__",
+            "order": 5
          },
          "location" : {
             "helper" : "__location_helper__",
-            "label" : "__location__"
+            "label" : "__location__",
+            "order": 1
          },
          "unitSystem" : {
             "label" : "__unit_system__",
             "optionLabels" : [
                "__unit_system_metric__",
                "__unit_system_imperial__"
-            ]
+            ],
+            "order": 3
          },
          "unitTemperature" : {
             "label" : "__unit_temperature__",
             "optionLabels" : [
                "°C",
                "°F"
-            ]
+            ],
+            "order": 4
          }
       }
    },
