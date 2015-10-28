@@ -221,7 +221,8 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
         windLevel = 1;
     }
     self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+windLevel+".png");
-    self.devices.wind.set("metrics:level", current.wind_dir + ' ' + (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+    self.devices.wind.set("metrics:dir", current.wind_dir);
     self.devices.wind.set("metrics:wind", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
     self.devices.wind.set("metrics:windgust", (self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
     self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
