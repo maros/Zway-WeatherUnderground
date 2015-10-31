@@ -4,7 +4,7 @@
   "location_helper": "Either Country/City, Latitude-Longitude, Airport code or weatherundergound pws ID (see http://www.wunderground.com/weather/api/d/docs?d=data/index)",
   "location": "Location",
   "api_key": "API Key",
-  "unit_temperature": "Temperature Units",
+  "unit_temperature": "Temperature Unit",
   "unit_system": "Unit System",
   "unit_system_metric": "Metric",
   "unit_system_imperial": "Imperial",
