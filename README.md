@@ -8,7 +8,7 @@ See http://www.wunderground.com/weather/api/d/docs for details.
 
 # Configuration
 
-## location: 
+## location
 
 Accepts any format that constitutes a valid API query. 
 
@@ -31,6 +31,10 @@ Display metric or imperial units for air pressure and wind speed
 Required API key for accessing the service. See 
 http://www.wunderground.com/weather/api/ for obtaining an API key.
 
+## uv_device, wind_device, humidity_device
+
+Check if devices should be created
+
 # Virtual Devices
 
 This module creates four virtual devices
@@ -46,8 +50,6 @@ Additionally the following metrics are set
 *    metrics:conditiongroup: fair,neutral,rain or snow
 *    metrics:feelslike
 *    metrics:pressure
-*    metrics:uv: [0-11]
-*    metrics:solarradiation: in watts/m2
 *    metrics:weather: Current weather
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
@@ -74,6 +76,7 @@ Displays the current wind speed. Wind level is indicated by the icon.
 
 *    metrics:level: Wind speed
 *    metrics:dir: Wind direction
+*    metrics:wind_avg: Wind average of last three updates
 *    metrics:windgust: Wind gust speeds
 *    metrics:winddregrees: Wind degrees
 *    metrics:windlevel: Wind strength [0-3]
@@ -81,6 +84,14 @@ Displays the current wind speed. Wind level is indicated by the icon.
 ## Humidity
 
 Displays the current humidity.
+
+## UV
+
+Displays the current UV index [0-11+]
+
+*    metrics:uv_avg: UV index average of last three updates
+*    metrics:solarradiation: in watts/m2
+*    metrics:metrics:solarradiation_avg: Radiation average of last three updates
 
 # Events
 
