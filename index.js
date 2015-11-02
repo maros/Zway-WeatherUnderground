@@ -79,6 +79,7 @@ WeatherUnderground.prototype.init = function (config) {
      
     
     var currentTime     = (new Date()).getTime();
+    var currentLevel    = self.devices['current'].get('metrics:level');
     var updateTime      = self.devices['current'].get('updateTime') * 1000;
     var intervalTime    = parseInt(self.config.interval) * 60 * 1000;
     
@@ -87,7 +88,8 @@ WeatherUnderground.prototype.init = function (config) {
     }, intervalTime);
     
     console.log('[WeatherUnderground] Last update time '+updateTime);
-    if ((updateTime + intervalTime / 3) < currentTime) {
+    if ((updateTime + intervalTime / 3) < currentTime 
+        || typeof(currentLevel) === 'undefined') {
         self.fetchWeather(self);
     }
 };
