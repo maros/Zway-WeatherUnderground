@@ -182,7 +182,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
     self.devices.current.set("metrics:pressure", (self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in));
     self.devices.current.set("metrics:feelslike", (self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
-    self.devices.current.set("metrics:uv",current.uv);
+    self.devices.current.set("metrics:uv",current.UV);
     self.devices.current.set("metrics:solarradiation",current.solarradiation);
     self.devices.current.set("metrics:weather",current.weather);
     self.devices.current.set("metrics:pop",forecast[0].pop);
@@ -190,7 +190,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:low",currentLow);
     self.devices.current.set("metrics:raw",current);
     
-    self.averageSet(self.devices.current,'uv',current.uv);
+    self.averageSet(self.devices.current,'uv',current.UV);
     self.averageSet(self.devices.current,'solarradiation',current.solarradiation);
     
     // Handle forecast
