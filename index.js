@@ -102,7 +102,7 @@ WeatherUnderground.prototype.stop = function () {
         self.timer = undefined;
     }
     
-    if (typeof self.devices !== 'undefined') {
+    if (typeof(self.devices) !== 'undefined') {
         _.each(self.devices,function(value, key) {
             self.controller.devices.remove(value.id);
         });
@@ -112,15 +112,17 @@ WeatherUnderground.prototype.stop = function () {
     WeatherUnderground.super_.prototype.stop.call(this);
 };
 
-WeatherUnderground.prototype.addDevice = function(prefix,overlay) {
+WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
     var self = this;
     
     var deviceParams = {
-        overlay: overlay,
+        overlay: { deviceType: "sensorMultilevel" },
+        defaults: {
+            metrics: defaults
+        },
         deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
         moduleId: prefix+"_"+this.id
     };
-    deviceParams.overlay['deviceType'] = "sensorMultilevel";
     
     self.devices[prefix] = self.controller.devices.create(deviceParams);
     return self.devices[prefix];
