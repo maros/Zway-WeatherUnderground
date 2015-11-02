@@ -46,24 +46,37 @@ WeatherUnderground.prototype.init = function (config) {
         title: self.langFile.current
     });
     
-    self.addDevice('humidity',{
-        probeTitle: 'humidity',
-        icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
-        scaleTitle: '%',
-        title: self.langFile.humidity
-    });
-    
-    self.addDevice('wind',{
-        probeTitle: 'wind',
-        scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
-        title: self.langFile.wind
-    });
-    
     self.addDevice('forecast',{
         probeTitle: 'weather_forecast',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
         title: self.langFile.forecast
     });
+    
+    if (config.humidity_device) {
+        self.addDevice('humidity',{
+            probeTitle: 'humidity',
+            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
+            scaleTitle: '%',
+            title: self.langFile.humidity
+        });
+    }
+    
+    if (config.wind_device) {
+        self.addDevice('wind',{
+            probeTitle: 'wind',
+            scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
+            title: self.langFile.wind
+        });
+    }
+    
+    if (config.uv_device) {
+        self.addDevice('uv',{
+            probeTitle: 'uv',
+            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
+            title: self.langFile.uv
+        });
+    }
+     
     
     var currentTime     = (new Date()).getTime();
     var updateTime      = self.devices['current'].get('updateTime') * 1000;
@@ -182,16 +195,11 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
     self.devices.current.set("metrics:pressure", (self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in));
     self.devices.current.set("metrics:feelslike", (self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
-    self.devices.current.set("metrics:uv",current.UV);
-    self.devices.current.set("metrics:solarradiation",current.solarradiation);
     self.devices.current.set("metrics:weather",current.weather);
     self.devices.current.set("metrics:pop",forecast[0].pop);
     self.devices.current.set("metrics:high",currentHigh);
     self.devices.current.set("metrics:low",currentLow);
     self.devices.current.set("metrics:raw",current);
-    
-    self.averageSet(self.devices.current,'uv',current.UV);
-    self.averageSet(self.devices.current,'solarradiation',current.solarradiation);
     
     // Handle forecast
     var forecastHigh = (self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
@@ -208,27 +216,38 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.forecast.set("metrics:raw",forecast);
     
     // Handle humidity
-    self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
+    if (self.config.humidity_device) {
+        self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
+    }
     
     // Handle wind
-    var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
-    var windLevel = 0;
-    if (wind >= 62) { // Beaufort 8
-        windLevel = 3;
-    } else if (wind >= 39) { // Beaufort 6
-        windLevel = 2;
-    } else if (wind >= 12) { // Beaufort 3
-        windLevel = 1;
+    if (self.config.wind_device) {
+        var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
+        var windLevel = 0;
+        if (wind >= 62) { // Beaufort 8
+            windLevel = 3;
+        } else if (wind >= 39) { // Beaufort 6
+            windLevel = 2;
+        } else if (wind >= 12) { // Beaufort 3
+            windLevel = 1;
+        }
+        self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+windLevel+".png");
+        self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+        self.devices.wind.set("metrics:dir", current.wind_dir);
+        self.devices.wind.set("metrics:wind", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+        self.devices.wind.set("metrics:windgust", (self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
+        self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
+        self.devices.wind.set("metrics:windlevel",windLevel);
+        self.averageSet(self.devices.wind,'wind',wind);
     }
-    self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+windLevel+".png");
-    self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
-    self.devices.wind.set("metrics:dir", current.wind_dir);
-    self.devices.wind.set("metrics:wind", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
-    self.devices.wind.set("metrics:windgust", (self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
-    self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
-    self.devices.wind.set("metrics:windlevel",windLevel);
-    self.averageSet(self.devices.wind,'wind',wind);
     
+    // Handle humidity
+    if (self.config.uv_device) {
+        self.averageSet(self.devices.uv,'solarradiation',current.solarradiation);
+        self.devices.uv.set("metrics:solarradiation",current.solarradiation);
+        self.averageSet(self.devices.uv,'uv',current.UV);
+        self.devices.uv.set("metrics:level", parseInt(current.UV));
+    }
 };
 
 WeatherUnderground.prototype.transformCondition = function(condition) {

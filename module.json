@@ -46,6 +46,18 @@
                "°F"
             ],
             "order": 4
+         },
+         "uv_device": {
+             "label" : "__uv_device_label__",
+             "order": 7
+         },
+         "wind_device": {
+             "label" : "__wind_device_label__",
+             "order": 5
+         },
+         "humidity_device": {
+             "label" : "__humidity_device_label__",
+             "order": 6
          }
       }
    },
@@ -71,16 +83,26 @@
                "metric",
                "imperial"
             ],
-            "required" : true,
-            "type" : "select"
+            "required" : true
          },
          "unitTemperature" : {
             "enum" : [
                "celsius",
                "fahrenheit"
             ],
-            "required" : true,
-            "type" : "select"
+            "required" : true
+         },
+         "uv_device": {
+             "type": "boolean",
+             "default": true
+         },
+         "wind_device": {
+             "type": "boolean",
+             "default": true
+         },
+         "humidity_device": {
+             "type": "boolean",
+             "default": true
          }
       },
       "required" : true,
