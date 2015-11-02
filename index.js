@@ -188,17 +188,17 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
         ) ? 'day':'night';
     
     // Handle current state
-    var currentTemperature = (self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
-    var currentHigh        = (self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
-    var currentLow         = (self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
-    self.devices.current.set("metrics:conditiongroup",this.transformCondition(current.icon));
+    var currentTemperature = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
+    var currentHigh        = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
+    var currentLow         = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
+    self.devices.current.set("metrics:conditiongroup",self.transformCondition(current.icon));
     self.devices.current.set("metrics:condition",current.icon);
     //self.devices.current.set("metrics:title",current.weather);
     self.devices.current.set("metrics:level",currentTemperature);
     self.devices.current.set("metrics:temperature",currentTemperature);
     self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
-    self.devices.current.set("metrics:pressure", (self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in));
-    self.devices.current.set("metrics:feelslike", (self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
+    self.devices.current.set("metrics:pressure", parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in));
+    self.devices.current.set("metrics:feelslike", parseFloat(self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
     self.devices.current.set("metrics:weather",current.weather);
     self.devices.current.set("metrics:pop",forecast[0].pop);
     self.devices.current.set("metrics:high",currentHigh);
@@ -206,9 +206,9 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:raw",current);
     
     // Handle forecast
-    var forecastHigh = (self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
-    var forecastLow = (self.config.unitTemperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
-    self.devices.forecast.set("metrics:conditiongroup",this.transformCondition(forecast[1].icon));
+    var forecastHigh = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
+    var forecastLow = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
+    self.devices.forecast.set("metrics:conditiongroup",self.transformCondition(forecast[1].icon));
     self.devices.forecast.set("metrics:condition",forecast[1].icon);
     //self.devices.current.set("metrics:title",forecast[1].weather);
     self.devices.forecast.set("metrics:level", forecastLow + ' - ' + forecastHigh);
@@ -238,19 +238,21 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
         self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+windLevel+".png");
         self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
         self.devices.wind.set("metrics:dir", current.wind_dir);
-        self.devices.wind.set("metrics:wind", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
-        self.devices.wind.set("metrics:windgust", (self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
-        self.devices.wind.set("metrics:winddregrees", current.wind_degrees);
+        self.devices.wind.set("metrics:wind", parseFloat(self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+        self.devices.wind.set("metrics:windgust", parseFloat(self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
+        self.devices.wind.set("metrics:winddregrees", parseFloat(current.wind_degrees));
         self.devices.wind.set("metrics:windlevel",windLevel);
         self.averageSet(self.devices.wind,'wind',wind);
     }
     
     // Handle humidity
     if (self.config.uv_device) {
-        self.averageSet(self.devices.uv,'solarradiation',current.solarradiation);
-        self.devices.uv.set("metrics:solarradiation",current.solarradiation);
-        self.averageSet(self.devices.uv,'uv',current.UV);
-        self.devices.uv.set("metrics:level", parseInt(current.UV));
+        var uv = parseInt(current.UV);
+        var solarradiation = parseInt(current.solarradiation);
+        self.averageSet(self.devices.uv,'solarradiation',solarradiation);
+        self.devices.uv.set("metrics:solarradiation",solarradiation);
+        self.averageSet(self.devices.uv,'uv',uv);
+        self.devices.uv.set("metrics:level", uv);
     }
 };
 
