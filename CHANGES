@@ -1,0 +1,17 @@
+1.02 2015 Nov 02, Mon
+    * Fix device creation
+    * Fix initial init
+    * Fix UV setpoints
+	* UV device
+	* Specify which devices to create (wind, uv, humidity)
+    * Store values as numbers, not strings
+    * Change wind probeTitle
+    * Load lang file only once
+
+1.01 2015 Oct 25, Sun
+    * Don't treat fog as rain
+	* Don't query on startup if last query is recent
+	* Raw forecast data
+
+1.00 2015 Oct 16, Fri
+    * Initial release

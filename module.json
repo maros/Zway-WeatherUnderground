@@ -19,17 +19,21 @@
       "fields" : {
          "apiKey" : {
             "label" : "__api_key__",
-            "order": 2
+            "order" : 2
+         },
+         "humidity_device" : {
+            "label" : "__humidity_device_label__",
+            "order" : 6
          },
          "interval" : {
             "helper" : "__interval_helper__",
             "label" : "__interval_label__",
-            "order": 5
+            "order" : 5
          },
          "location" : {
             "helper" : "__location_helper__",
             "label" : "__location__",
-            "order": 1
+            "order" : 1
          },
          "unitSystem" : {
             "label" : "__unit_system__",
@@ -37,7 +41,7 @@
                "__unit_system_metric__",
                "__unit_system_imperial__"
             ],
-            "order": 3
+            "order" : 3
          },
          "unitTemperature" : {
             "label" : "__unit_temperature__",
@@ -45,19 +49,15 @@
                "°C",
                "°F"
             ],
-            "order": 4
+            "order" : 4
          },
-         "uv_device": {
-             "label" : "__uv_device_label__",
-             "order": 7
+         "uv_device" : {
+            "label" : "__uv_device_label__",
+            "order" : 7
          },
-         "wind_device": {
-             "label" : "__wind_device_label__",
-             "order": 5
-         },
-         "humidity_device": {
-             "label" : "__humidity_device_label__",
-             "order": 6
+         "wind_device" : {
+            "label" : "__wind_device_label__",
+            "order" : 5
          }
       }
    },
@@ -70,6 +70,10 @@
          "apiKey" : {
             "required" : true,
             "type" : "string"
+         },
+         "humidity_device" : {
+            "default" : true,
+            "type" : "boolean"
          },
          "interval" : {
             "required" : true,
@@ -92,22 +96,18 @@
             ],
             "required" : true
          },
-         "uv_device": {
-             "type": "boolean",
-             "default": true
+         "uv_device" : {
+            "default" : true,
+            "type" : "boolean"
          },
-         "wind_device": {
-             "type": "boolean",
-             "default": true
-         },
-         "humidity_device": {
-             "type": "boolean",
-             "default": true
+         "wind_device" : {
+            "default" : true,
+            "type" : "boolean"
          }
       },
       "required" : true,
       "type" : "object"
    },
    "singleton" : true,
-   "version" : "1.01"
+   "version" : "1.02"
 }
