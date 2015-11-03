@@ -29,7 +29,7 @@ _module = WeatherUnderground;
 // --- Module instance initialized
 // ----------------------------------------------------------------------------
 
-WeatherUnderground.prototype.devices = ['wind','uv','humidity']
+WeatherUnderground.prototype.devices = ['wind','uv','humidity','barometer'];
 
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
@@ -76,11 +76,20 @@ WeatherUnderground.prototype.init = function (config) {
         });
     }
     
-    if (config.uvDevice) {
+    if (self.uvDevice) { 
         self.addDevice('uv',{
             probeTitle: 'uv',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
             title: self.langFile.uv
+        });
+    }
+
+    if (self.barometerDevice) {
+        self.addDevice('barometer',{
+            probeTitle: 'barometer',
+            scaleTitle: config.unitSystem === "metric" ? 'hPa' : 'inHg',
+            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer.png',
+            title: self.langFile.barometer
         });
     }
      
@@ -204,7 +213,6 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:level",currentTemperature);
     self.devices.current.set("metrics:temperature",currentTemperature);
     self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
-    self.devices.current.set("metrics:pressure", parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in));
     self.devices.current.set("metrics:feelslike", parseFloat(self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
     self.devices.current.set("metrics:weather",current.weather);
     self.devices.current.set("metrics:pop",forecast[0].pop);
@@ -260,6 +268,13 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
         self.devices.uv.set("metrics:solarradiation",solarradiation);
         self.averageSet(self.devices.uv,'uv',uv);
         self.devices.uv.set("metrics:level", uv);
+    }
+
+    // Handle barometer
+    if (self.barometerDevice) {
+        var pressure = parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in);
+        self.devices.baormeter.set('metrics:level',pressure);
+        self.devices.barometer.set('metrics:trend',current.pressure_trend);
     }
 };
 

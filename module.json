@@ -57,7 +57,11 @@
          },
          "windDevice" : {
             "label" : "__wind_device_label__",
-            "order" : 5
+            "order" : 85
+         },
+         "barometerDevice" : {
+            "label" : "__barometer_device_label__",
+            "order" : 
          }
       }
    },
@@ -101,6 +105,10 @@
             "type" : "boolean"
          },
          "windDevice" : {
+            "default" : true,
+            "type" : "boolean"
+         },
+         "barometerDevice": {
             "default" : true,
             "type" : "boolean"
          }
