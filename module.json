@@ -21,7 +21,7 @@
             "label" : "__api_key__",
             "order" : 2
          },
-         "humidity_device" : {
+         "humidityDevice" : {
             "label" : "__humidity_device_label__",
             "order" : 6
          },
@@ -51,11 +51,11 @@
             ],
             "order" : 4
          },
-         "uv_device" : {
+         "uvDevice" : {
             "label" : "__uv_device_label__",
             "order" : 7
          },
-         "wind_device" : {
+         "windDevice" : {
             "label" : "__wind_device_label__",
             "order" : 5
          }
@@ -71,7 +71,7 @@
             "required" : true,
             "type" : "string"
          },
-         "humidity_device" : {
+         "humidityDevice" : {
             "default" : true,
             "type" : "boolean"
          },
@@ -96,11 +96,11 @@
             ],
             "required" : true
          },
-         "uv_device" : {
+         "uvDevice" : {
             "default" : true,
             "type" : "boolean"
          },
-         "wind_device" : {
+         "windDevice" : {
             "default" : true,
             "type" : "boolean"
          }

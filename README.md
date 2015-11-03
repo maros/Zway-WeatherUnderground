@@ -18,26 +18,26 @@ Accepts any format that constitutes a valid API query.
 *   autoip (based on geo ip)
 *   LAT,LNG
 
-## unit_temperature
+## unitTemperature
 
 Display temperatures in Celsius or Fahrenheit
 
-## unit_system
+## unitSystem
 
 Display metric or imperial units for air pressure and wind speed
 
-## api_key
+## apiKey
 
 Required API key for accessing the service. See 
 http://www.wunderground.com/weather/api/ for obtaining an API key.
 
-## uv_device, wind_device, humidity_device
+## uvDevice, windDevice, humidityDevice
 
-Check if devices should be created
+Flag that sets if devices should be created
 
 # Virtual Devices
 
-This module creates four virtual devices
+This module creates up to five virtual devices
 
 ## Current conditions
 

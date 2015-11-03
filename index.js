@@ -29,6 +29,8 @@ _module = WeatherUnderground;
 // --- Module instance initialized
 // ----------------------------------------------------------------------------
 
+WeatherUnderground.prototype.devices = ['wind','uv','humidity']
+
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
 
@@ -40,6 +42,11 @@ WeatherUnderground.prototype.init = function (config) {
     this.unitSystem         = config.unitSystem.toString();
     this.langFile           = self.controller.loadModuleLang("WeatherUnderground");
     
+    _.each(self.devices,function(device) {
+        var key = device+'Device';
+        self[key] = (typeof(self.config[key]) === 'undefined' ? true:self.config[key]);
+    });
+
     self.addDevice('current',{
         probeTitle: 'weather_current',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
@@ -52,7 +59,7 @@ WeatherUnderground.prototype.init = function (config) {
         title: self.langFile.forecast
     });
     
-    if (config.humidity_device) {
+    if (self.humidityDevice) {
         self.addDevice('humidity',{
             probeTitle: 'humidity',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
@@ -61,7 +68,7 @@ WeatherUnderground.prototype.init = function (config) {
         });
     }
     
-    if (config.wind_device) {
+    if (self.windDevice) {
         self.addDevice('wind',{
             probeTitle: 'wind',
             scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
@@ -69,7 +76,7 @@ WeatherUnderground.prototype.init = function (config) {
         });
     }
     
-    if (config.uv_device) {
+    if (config.uvDevice) {
         self.addDevice('uv',{
             probeTitle: 'uv',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
@@ -220,12 +227,12 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.forecast.set("metrics:raw",forecast);
     
     // Handle humidity
-    if (self.config.humidity_device) {
+    if (self.humidityDevice) {
         self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
     }
     
     // Handle wind
-    if (self.config.wind_device) {
+    if (self.windDevice) {
         var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
         var windLevel = 0;
         if (wind >= 62) { // Beaufort 8
@@ -246,7 +253,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     }
     
     // Handle humidity
-    if (self.config.uv_device) {
+    if (self.uvDevice) {
         var uv = parseInt(current.UV);
         var solarradiation = parseInt(current.solarradiation);
         self.averageSet(self.devices.uv,'solarradiation',solarradiation);
