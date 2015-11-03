@@ -49,7 +49,6 @@ Additionally the following metrics are set
 *    metrics:condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
 *    metrics:feelslike
-*    metrics:pressure
 *    metrics:weather: Current weather
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
@@ -93,6 +92,12 @@ Displays the current UV index [0-11+]
 *    metrics:solarradiation: in watts/m2
 *    metrics:metrics:solarradiation_avg: Radiation average of last three updates
 
+## Barometer
+
+Displays the current air pressure
+
+*    metrics:trend: Pressure trend
+
 # Events
 
 No events are emitted
@@ -122,6 +127,9 @@ This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or any 
 later version.
+
+Parts of the barometer icon are from (http://www.flaticon.com/authors/yannick) 
+, licensed under the Creative Commons 3.0 license.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
