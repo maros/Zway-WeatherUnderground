@@ -29,7 +29,7 @@ _module = WeatherUnderground;
 // --- Module instance initialized
 // ----------------------------------------------------------------------------
 
-WeatherUnderground.prototype.devices = ['wind','uv','humidity','barometer'];
+WeatherUnderground.prototype.deviceTypes = ['wind','uv','humidity','barometer'];
 
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
@@ -42,9 +42,9 @@ WeatherUnderground.prototype.init = function (config) {
     this.unitSystem         = config.unitSystem.toString();
     this.langFile           = self.controller.loadModuleLang("WeatherUnderground");
     
-    _.each(self.devices,function(device) {
-        var key = device+'Device';
-        self[key] = (typeof(self.config[key]) === 'undefined' ? true:self.config[key]);
+    _.each(self.deviceTypes,function(deviceType) {
+        var key = deviceType+'_device';
+        self[deviceType+'Device'] = (typeof(self.config[key]) === 'undefined' ? true:self.config[key]);
     });
 
     self.addDevice('current',{
