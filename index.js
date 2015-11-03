@@ -50,7 +50,8 @@ WeatherUnderground.prototype.init = function (config) {
     self.addDevice('current',{
         probeTitle: 'weather_current',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
-        title: self.langFile.current
+        title: self.langFile.current,
+        timestamp: 0
     });
     
     self.addDevice('forecast',{
@@ -96,7 +97,7 @@ WeatherUnderground.prototype.init = function (config) {
     
     var currentTime     = (new Date()).getTime();
     var currentLevel    = self.devices['current'].get('metrics:level');
-    var updateTime      = self.devices['current'].get('updateTime') * 1000;
+    var updateTime      = self.devices['current'].get('metrics:timestamp');
     var intervalTime    = parseInt(self.config.interval) * 60 * 1000;
     
     self.timer = setInterval(function() {
@@ -104,8 +105,7 @@ WeatherUnderground.prototype.init = function (config) {
     }, intervalTime);
     
     console.log('[WeatherUnderground] Last update time '+updateTime);
-    if ((updateTime + intervalTime / 3) < currentTime 
-        || typeof(currentLevel) === 'undefined') {
+    if ((updateTime + intervalTime / 3) < currentTime) {
         self.fetchWeather(self);
     }
 };
@@ -219,6 +219,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     self.devices.current.set("metrics:high",currentHigh);
     self.devices.current.set("metrics:low",currentLow);
     self.devices.current.set("metrics:raw",current);
+    self.devices.current.set("metrics:timestamp",currentDate.getTime());
     
     // Handle forecast
     var forecastHigh = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
