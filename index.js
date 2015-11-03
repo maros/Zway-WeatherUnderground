@@ -88,7 +88,7 @@ WeatherUnderground.prototype.init = function (config) {
         self.addDevice('barometer',{
             probeTitle: 'barometer',
             scaleTitle: config.unitSystem === "metric" ? 'hPa' : 'inHg',
-            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer.png',
+            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer0.png',
             title: self.langFile.barometer
         });
     }
@@ -273,7 +273,8 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     // Handle barometer
     if (self.barometerDevice) {
         var pressure = parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in);
-        self.devices.baormeter.set('metrics:level',pressure);
+        self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer"+current.pressure_trend+".png");
+        self.devices.barometer.set('metrics:level',pressure);
         self.devices.barometer.set('metrics:trend',current.pressure_trend);
     }
 };
