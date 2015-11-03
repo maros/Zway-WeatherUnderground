@@ -5,6 +5,7 @@
    "forecast" : "Forecast",
    "humidity" : "Humidity",
    "humidity_device_label" : "Humidity device",
+   "barometer_device_label" : "Barometer device",
    "interval_helper" : "Specifies weather data refresh interval in minutes",
    "interval_label" : "Refresh interval",
    "location" : "Location",
@@ -17,5 +18,6 @@
    "uv_device_label" : "UV Index device",
    "wind" : "Wind",
    "wind_device_label" : "Wind device",
-   "uv" : "UV Index"
+   "uv" : "UV Index",
+   "barometer": "Barometer"
 }
