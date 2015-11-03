@@ -1,6 +1,6 @@
 /*** WeatherUnderground Z-Way HA module *******************************************
 
-Version: 1.02
+Version: 1.03
 (c) Maroš Kollár, 2015
 -----------------------------------------------------------------------------
 Author: Maroš Kollár <maros@k-1.com>
@@ -274,7 +274,7 @@ WeatherUnderground.prototype.processResponse = function(instance,response) {
     // Handle barometer
     if (self.barometerDevice) {
         var pressure = parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in);
-        self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer"+current.pressure_trend+".png");
+        self.devices.barometer.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer"+current.pressure_trend+".png");
         self.devices.barometer.set('metrics:level',pressure);
         self.devices.barometer.set('metrics:trend',current.pressure_trend);
     }
