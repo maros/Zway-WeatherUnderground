@@ -57,11 +57,11 @@
          },
          "windDevice" : {
             "label" : "__wind_device_label__",
-            "order" : 85
+            "order" : 8
          },
          "barometerDevice" : {
             "label" : "__barometer_device_label__",
-            "order" : 
+            "order" : 9
          }
       }
    },
