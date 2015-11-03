@@ -71,7 +71,7 @@ range.
 
 ## Wind
 
-Displays the current wind speed. Wind level is indicated by the icon.
+Displays the current wind speed. Wind strength is indicated by the icon.
 
 *    metrics:level: Wind speed
 *    metrics:dir: Wind direction
@@ -94,7 +94,8 @@ Displays the current UV index [0-11+]
 
 ## Barometer
 
-Displays the current air pressure
+Displays the current air pressure. Rising and falling pressure is also 
+indicated by the icon.
 
 *    metrics:trend: Pressure trend
 
