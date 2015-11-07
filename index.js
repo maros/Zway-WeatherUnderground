@@ -294,9 +294,9 @@ WeatherUnderground.prototype.transformCondition = function(condition) {
     return 'unknown';
 };
 
-WeatherUnderground.prototype.averageSet = function(device,key,value,count) {
+WeatherUnderground.prototype.averageSet = function(deviceObject,key,value,count) {
     count = count || 3;
-    var list = device.get('metrics:'+key+'_list') || [];
+    var list = deviceObject.get('metrics:'+key+'_list') || [];
     list.unshift(value);
     while (list.length > count) {
         list.pop();
@@ -304,8 +304,8 @@ WeatherUnderground.prototype.averageSet = function(device,key,value,count) {
     var sum = _.reduce(list, function(i,j){ return i + j; }, 0);
     var avg = sum / list.length;
 
-    device.set('metrics:'+key+'_list',list);
-    device.set('metrics:'+key+'_avg',avg);
+    deviceObject.set('metrics:'+key+'_list',list);
+    deviceObject.set('metrics:'+key+'_avg',avg);
     
     return avg;
 };
