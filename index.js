@@ -48,21 +48,21 @@ WeatherUnderground.prototype.init = function (config) {
     });
 
     self.addDevice('current',{
-        probeTitle: 'weather_current',
+        probeTitle: 'WeatherUndergoundCurrent',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
         title: self.langFile.current,
         timestamp: 0
     });
     
     self.addDevice('forecast',{
-        probeTitle: 'weather_forecast',
+        probeTitle: 'WeatherUndergoundForecast',
         scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
         title: self.langFile.forecast
     });
     
     if (self.humidityDevice) {
         self.addDevice('humidity',{
-            probeTitle: 'humidity',
+            probeTitle: 'Humidity',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
             scaleTitle: '%',
             title: self.langFile.humidity
@@ -79,7 +79,7 @@ WeatherUnderground.prototype.init = function (config) {
     
     if (self.uvDevice) { 
         self.addDevice('uv',{
-            probeTitle: 'uv',
+            probeTitle: 'Ultraviolet',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
             title: self.langFile.uv
         });
@@ -87,7 +87,7 @@ WeatherUnderground.prototype.init = function (config) {
 
     if (self.barometerDevice) {
         self.addDevice('barometer',{
-            probeTitle: 'barometer',
+            probeTitle: 'BarometricPressure',
             scaleTitle: config.unitSystem === "metric" ? 'hPa' : 'inHg',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer0.png',
             title: self.langFile.barometer
