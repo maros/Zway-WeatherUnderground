@@ -148,15 +148,15 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
 // --- Module methods
 // ----------------------------------------------------------------------------
 
-WeatherUnderground.prototype.fetchWeather = function (instance) {
-    var self = instance;
+WeatherUnderground.prototype.fetchWeather = function () {
+    var self = this;
     
     var url = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
     
     http.request({
         url: url,
         async: true,
-        success: function(response) { self.processResponse(instance,response) },
+        success: function(response) { self.processResponse(response) },
         error: function(response) {
             console.error("[WeatherUnderground] Update error");
             console.logJS(response);
@@ -170,10 +170,10 @@ WeatherUnderground.prototype.fetchWeather = function (instance) {
     });
 };
 
-WeatherUnderground.prototype.processResponse = function(instance,response) {
+WeatherUnderground.prototype.processResponse = function(response) {
     console.log("[WeatherUnderground] Update");
     
-    var self        = instance;
+    var self        = this;
     var current     = response.data.current_observation;
     var currentDate = new Date();
     var sunrise     = response.data.sun_phase.sunrise;
