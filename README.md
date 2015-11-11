@@ -2,7 +2,7 @@
 
 Zway Automation module for fetching current condition and forecasts from the
 WeatherUnderground API. Creates virtual devices for humidity, wind, current 
-conditions and forecasts.
+conditions, UV index, barometric pressure and forecasts.
 
 See http://www.wunderground.com/weather/api/d/docs for details.
 
@@ -31,7 +31,7 @@ Display metric or imperial units for air pressure and wind speed
 Required API key for accessing the service. See 
 http://www.wunderground.com/weather/api/ for obtaining an API key.
 
-## uvDevice, windDevice, humidityDevice
+## uvDevice, windDevice, humidityDevice, barometerDevice
 
 Flag that sets if devices should be created
 
