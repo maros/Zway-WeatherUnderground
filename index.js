@@ -30,7 +30,27 @@ _module = WeatherUnderground;
 // ----------------------------------------------------------------------------
 
 WeatherUnderground.prototype.deviceTypes = ['wind','uv','humidity','barometer'];
-
+WeatherUnderground.prototype.windBeaufort = [
+    1.1,    // 0
+    5.5,
+    11.9,
+    19.7,
+    28.7,
+    38.8,
+    49.9,   // 6
+    61.8,
+    74.6,
+    88.1,
+    102.4,
+    117.4,
+    Number.POSITIVE_INFINITY
+];
+WeatherUnderground.prototype.windIcons = [
+     1,
+     4,
+     7,
+     Number.POSITIVE_INFINITY
+];
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
 
@@ -243,21 +263,19 @@ WeatherUnderground.prototype.processResponse = function(response) {
     // Handle wind
     if (self.windDevice) {
         var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
-        var windLevel = 0;
-        if (wind >= 62) { // Beaufort 8
-            windLevel = 3;
-        } else if (wind >= 39) { // Beaufort 6
-            windLevel = 2;
-        } else if (wind >= 12) { // Beaufort 3
-            windLevel = 1;
-        }
-        self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+windLevel+".png");
+        var beaufort = _.findIndex(self.windBeaufort,function(check) {
+            return wind > check;
+        });
+        var icon = _.findIndex(self.windIcons,function(check) {
+            return beaufort < check;
+        });
+        self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+icon+".png");
         self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
         self.devices.wind.set("metrics:dir", current.wind_dir);
         self.devices.wind.set("metrics:wind", parseFloat(self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
         self.devices.wind.set("metrics:windgust", parseFloat(self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
         self.devices.wind.set("metrics:winddregrees", parseFloat(current.wind_degrees));
-        self.devices.wind.set("metrics:windlevel",windLevel);
+        self.devices.wind.set("metrics:beaufort",beaufort);
         self.averageSet(self.devices.wind,'wind',wind);
     }
     

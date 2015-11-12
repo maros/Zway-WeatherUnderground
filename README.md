@@ -46,7 +46,7 @@ Additionally the following metrics are set
 
 *    metrics:level Current temperature
 *    metrics:temperature
-*    metrics:condition
+*    metrics:condition: Current condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
 *    metrics:feelslike
 *    metrics:weather: Current weather
@@ -61,7 +61,7 @@ Displays the forecasted condition as an icon, and the expected temperature
 range.
 
 *    metrics:level Forecast temperature range
-*    metrics:condition
+*    metrics:condition: Current condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
 *    metrics:weather: Current weather
 *    metrics:pop: probability of precipitation
@@ -78,7 +78,7 @@ Displays the current wind speed. Wind strength is indicated by the icon.
 *    metrics:wind_avg: Wind average of last three updates
 *    metrics:windgust: Wind gust speeds
 *    metrics:winddregrees: Wind degrees
-*    metrics:windlevel: Wind strength [0-3]
+*    metrics:beaufort: Wind strength in beaufort [0-12]
 
 ## Humidity
 
