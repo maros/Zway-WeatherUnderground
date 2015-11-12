@@ -46,10 +46,10 @@ WeatherUnderground.prototype.windBeaufort = [
     Number.POSITIVE_INFINITY
 ];
 WeatherUnderground.prototype.windIcons = [
-     1,
-     4,
-     7,
-     Number.POSITIVE_INFINITY
+    2,
+    4,
+    7,
+    Number.POSITIVE_INFINITY
 ];
 WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
