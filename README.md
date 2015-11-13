@@ -37,7 +37,7 @@ Flag that sets if devices should be created
 
 # Virtual Devices
 
-This module creates up to five virtual devices
+This module creates up to six virtual devices
 
 ## Current conditions
 
@@ -49,7 +49,7 @@ Additionally the following metrics are set
 *    metrics:condition: Current condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
 *    metrics:feelslike
-*    metrics:weather: Current weather
+*    metrics:weather: Current weather summary
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
 *    metrics:low: expected low temperature today
@@ -63,7 +63,7 @@ range.
 *    metrics:level Forecast temperature range
 *    metrics:condition: Current condition
 *    metrics:conditiongroup: fair,neutral,rain or snow
-*    metrics:weather: Current weather
+*    metrics:weather: Current weather summary
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
 *    metrics:low: expected low temperature today
@@ -90,7 +90,7 @@ Displays the current UV index [0-11+]
 
 *    metrics:uv_avg: UV index average of last three updates
 *    metrics:solarradiation: in watts/m2
-*    metrics:metrics:solarradiation_avg: Radiation average of last three updates
+*    metrics:solarradiation_avg: Radiation average of last three updates
 
 ## Barometer
 
