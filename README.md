@@ -47,7 +47,7 @@ Additionally the following metrics are set
 *    metrics:level Current temperature
 *    metrics:temperature
 *    metrics:condition: Current condition
-*    metrics:conditiongroup: fair,neutral,rain or snow
+*    metrics:conditiongroup: fair,neutral,poor or snow
 *    metrics:feelslike
 *    metrics:weather: Current weather summary
 *    metrics:pop: probability of precipitation
@@ -62,7 +62,7 @@ range.
 
 *    metrics:level Forecast temperature range
 *    metrics:condition: Current condition
-*    metrics:conditiongroup: fair,neutral,rain or snow
+*    metrics:conditiongroup: fair,neutral,poor or snow
 *    metrics:weather: Current weather summary
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
