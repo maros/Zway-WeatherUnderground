@@ -1,3 +1,9 @@
+1.04 2015 Nov 15, Sun
+    * Set wind level in beaufort
+    * Update documentation
+    * Use standard probe titles
+    * Unify variable names (to match with ForecastIO)
+
 1.03 2015 Nov 03, Tue
     * Fix detection of last query
     * Fix module schema
