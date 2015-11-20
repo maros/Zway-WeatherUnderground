@@ -46,9 +46,9 @@ WeatherUnderground.prototype.windBeaufort = [
     Number.POSITIVE_INFINITY
 ];
 WeatherUnderground.prototype.windIcons = [
-    2,
-    4,
-    7,
+    1,
+    3,
+    6,
     Number.POSITIVE_INFINITY
 ];
 WeatherUnderground.prototype.init = function (config) {
@@ -268,7 +268,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     if (self.windDevice) {
         var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
         var beaufort = _.findIndex(self.windBeaufort,function(check) {
-            return wind > check;
+            return wind < check;
         });
         var icon = _.findIndex(self.windIcons,function(check) {
             return beaufort < check;
