@@ -266,7 +266,11 @@ WeatherUnderground.prototype.processResponse = function(response) {
     
     // Handle wind
     if (self.windDevice) {
-        var wind = (parseInt(current.wind_kph) + parseInt(current.wind_gust_kph)) / 2;
+        var wind = parseInt(current.wind_kph);
+        var windGust = parseInt(current.wind_gust_kph);
+        if (windGust > wind) {
+            wind = (wind + windGust) / 2;
+        }
         var beaufort = _.findIndex(self.windBeaufort,function(check) {
             return wind < check;
         });
