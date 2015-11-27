@@ -1,3 +1,8 @@
+1.05 2015 Nov 27, Fri
+    * Improve wind calculation
+    * Update wind -> beaufort
+    * Replace logo to honour license
+
 1.04 2015 Nov 15, Sun
     * Set wind level in beaufort
     * Update documentation
