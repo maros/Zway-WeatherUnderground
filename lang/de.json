@@ -1,0 +1,23 @@
+{
+   "api_key" : "API Schlüssel",
+   "current" : "Wetter",
+   "description" : "Dieses Modul holt aktuelle Wetterdaten und Vorhersagen von www.wunderground.com. Es wird je ein Modul für die aktuellen Wetterbedingungen, die Vorhersage, Windbedingungen, UV Index und  den Luftdruck angelegt.",
+   "forecast" : "Vorhersage",
+   "humidity" : "Luftfeuchtigkeit",
+   "humidity_device_label" : "Hygrometer Modul",
+   "barometer_device_label" : "Barometer Modul",
+   "interval_helper" : "Daten Aktualisierungsintervall in Minuten",
+   "interval_label" : "Aktualisierungsintervall",
+   "location" : "Standort",
+   "location_helper" : "Entweder im Format Labd/Stadt, Breite-Länge, Flughafencode oder Weatherundergound PWS ID (siehe http://www.wunderground.com/weather/api/d/docs?d=data/index)",
+   "title" : "WeatherUndergound Modul",
+   "unit_system" : "Maßeinheiten",
+   "unit_system_imperial" : "Angloamerikanisch",
+   "unit_system_metric" : "Metrisch",
+   "unit_temperature" : "Temperatureinheit",
+   "uv_device_label" : "UV Index Modul",
+   "wind" : "Wind",
+   "wind_device_label" : "Wind Modul",
+   "uv" : "UV Index",
+   "barometer": "Barometer"
+}
