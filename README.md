@@ -73,8 +73,9 @@ range.
 
 Displays the current wind speed. Wind strength is indicated by the icon.
 
-*    metrics:level: Wind speed
+*    metrics:level: Wind speed (wind / 2 + windgust / 2)
 *    metrics:dir: Wind direction
+*    metrics:wind: Base wind speed
 *    metrics:wind_avg: Wind average of last three updates
 *    metrics:windgust: Wind gust speeds
 *    metrics:winddregrees: Wind degrees

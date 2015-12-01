@@ -266,25 +266,28 @@ WeatherUnderground.prototype.processResponse = function(response) {
     
     // Handle wind
     if (self.windDevice) {
-        var wind = parseInt(current.wind_kph);
-        var windGust = parseInt(current.wind_gust_kph);
-        if (windGust > wind) {
-            wind = (wind + windGust) / 2;
+        var windKph = parseInt(current.wind_kph,10);
+        var windKphGust = parseInt(current.wind_gust_mph,10);
+        var windMph = parseInt(current.wind_kph,10);
+        var windMphGust = parseInt(current.wind_gust_mph,10);
+        if (windKphGust > windKph) {
+            windKph = (windKph + windKphGust) / 2;
+            windMph = (windMph + windMphGust) / 2;
         }
         var beaufort = _.findIndex(self.windBeaufort,function(check) {
-            return wind < check;
+            return windKph < check;
         });
         var icon = _.findIndex(self.windIcons,function(check) {
             return beaufort < check;
         });
         self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+icon+".png");
-        self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
+        self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? windKph : windMph));
         self.devices.wind.set("metrics:dir", current.wind_dir);
         self.devices.wind.set("metrics:wind", parseFloat(self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
         self.devices.wind.set("metrics:windgust", parseFloat(self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
         self.devices.wind.set("metrics:winddregrees", parseFloat(current.wind_degrees));
         self.devices.wind.set("metrics:beaufort",beaufort);
-        self.averageSet(self.devices.wind,'wind',wind);
+        self.averageSet(self.devices.wind,'wind',(self.config.unitSystem === "metric" ? windKph : windMph));
     }
     
     // Handle humidity
