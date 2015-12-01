@@ -116,9 +116,9 @@ WeatherUnderground.prototype.init = function (config) {
      
     
     var currentTime     = (new Date()).getTime();
-    var currentLevel    = self.devices['current'].get('metrics:level');
-    var updateTime      = self.devices['current'].get('metrics:timestamp');
-    var intervalTime    = parseInt(self.config.interval) * 60 * 1000;
+    var currentLevel    = self.devices.current.get('metrics:level');
+    var updateTime      = self.devices.current.get('metrics:timestamp');
+    var intervalTime    = parseInt(self.config.interval,10) * 60 * 1000;
     
     self.timer = setInterval(function() {
         self.fetchWeather(self);
@@ -180,7 +180,7 @@ WeatherUnderground.prototype.fetchWeather = function () {
     http.request({
         url: url,
         async: true,
-        success: function(response) { self.processResponse(response) },
+        success: function(response) { self.processResponse(response); },
         error: function(response) {
             console.error("[WeatherUnderground] Update error");
             console.logJS(response);
@@ -203,10 +203,10 @@ WeatherUnderground.prototype.processResponse = function(response) {
     var sunrise     = response.data.sun_phase.sunrise;
     var sunset      = response.data.sun_phase.sunset;
     var forecast    = response.data.forecast.simpleforecast.forecastday;
-    sunset.hour     = parseInt(sunset.hour);
-    sunset.minute   = parseInt(sunset.minute);
-    sunrise.hour    = parseInt(sunrise.hour);
-    sunrise.minute  = parseInt(sunrise.minute);
+    sunset.hour     = parseInt(sunset.hour,10);
+    sunset.minute   = parseInt(sunset.minute,10);
+    sunrise.hour    = parseInt(sunrise.hour,10);
+    sunrise.minute  = parseInt(sunrise.minute,10);
     //console.logJS(response.data);
     
     var daynight = (
@@ -261,7 +261,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     
     // Handle humidity
     if (self.humidityDevice) {
-        self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity));
+        self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity,10));
     }
     
     // Handle wind
@@ -289,8 +289,8 @@ WeatherUnderground.prototype.processResponse = function(response) {
     
     // Handle humidity
     if (self.uvDevice) {
-        var uv = parseInt(current.UV);
-        var solarradiation = parseInt(current.solarradiation);
+        var uv = parseInt(current.UV,10);
+        var solarradiation = parseInt(current.solarradiation,10);
         self.averageSet(self.devices.uv,'solarradiation',solarradiation);
         self.devices.uv.set("metrics:solarradiation",solarradiation);
         self.averageSet(self.devices.uv,'uv',uv);
@@ -312,7 +312,7 @@ WeatherUnderground.prototype.transformCondition = function(condition) {
     } else if (_.contains(["chancetstorms", "chancerain", "rain" ,"tstorms"], condition)) {
         return 'poor';
     } else if (_.contains(["cloudy", "mostlycloudy","fog"], condition)) {
-        return 'neutral'
+        return 'neutral';
     } else if (_.contains(["clear", "hazy", "mostlysunny", "partlysunny", "partlycloudy"], condition)) {
         return 'fair';
     }
