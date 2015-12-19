@@ -53,6 +53,7 @@ Additionally the following metrics are set
 *    metrics:pop: probability of precipitation
 *    metrics:high: expected high temperature today
 *    metrics:low: expected low temperature today
+*    metrics:percipintensity: Rain intensity in mm or inches / 1h
 *    metrics:raw: raw current conditions data returned by the API
 
 ## Forecast
