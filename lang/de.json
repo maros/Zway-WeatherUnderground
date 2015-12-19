@@ -1,7 +1,7 @@
 {
    "api_key" : "API Schlüssel",
    "current" : "Wetter",
-   "description" : "Dieses Modul holt aktuelle Wetterdaten und Vorhersagen von www.wunderground.com. Es wird je ein Modul für die aktuellen Wetterbedingungen, die Vorhersage, Windbedingungen, UV Index und  den Luftdruck angelegt.",
+   "description" : "Dieses Modul holt aktuelle Wetterdaten und Vorhersagen von www.wunderground.com. Es wird je ein Modul für die aktuellen Wetterbedingungen, die Vorhersage, Windbedingungen, UV Index und den Luftdruck angelegt.",
    "forecast" : "Vorhersage",
    "humidity" : "Luftfeuchtigkeit",
    "humidity_device_label" : "Hygrometer Modul",
