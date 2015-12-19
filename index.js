@@ -231,6 +231,8 @@ WeatherUnderground.prototype.processResponse = function(response) {
     var currentTemperature = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
     var currentHigh        = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
     var currentLow         = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
+    var percipIntensity    = parseFloat(self.config.unitSystem === "metric" ? current.precip_1hr_metric : current.precip_1hr_in);
+
     self.devices.current.set("metrics:conditiongroup",self.transformCondition(current.icon));
     self.devices.current.set("metrics:condition",current.icon);
     //self.devices.current.set("metrics:title",current.weather);
@@ -244,6 +246,8 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.current.set("metrics:low",currentLow);
     self.devices.current.set("metrics:raw",current);
     self.devices.current.set("metrics:timestamp",currentDate.getTime());
+    self.devices.current.set("metrics:percipintensity",percipIntensity);
+    
     
     // Handle forecast
     var forecastHigh = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
