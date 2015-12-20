@@ -1,3 +1,7 @@
+1.07 2015 Dec 20, Sun
+    * Add metrics:percipintensity
+    * Update title
+
 1.06 2015 Dec 19, Sat
     * Improve handling of wind
     * cleanup jshint issues
