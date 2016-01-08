@@ -1,7 +1,7 @@
 {
    "api_key" : "API Key",
    "current" : "Current condition",
-   "description" : "Fetches detailed weather data from www.wunderground.com. Creates up to six virtual devices for humidity, pressure, current conditions, wind, solar radiation and forecasts.",
+   "m_descr" : "Fetches detailed weather data from www.wunderground.com. Creates up to six virtual devices for humidity, pressure, current conditions, wind, solar radiation and forecasts.",
    "forecast" : "Forecast",
    "humidity" : "Humidity",
    "humidity_device_label" : "Humidity device",
@@ -10,7 +10,7 @@
    "interval_label" : "Refresh interval",
    "location" : "Location",
    "location_helper" : "Either Country/City, Latitude-Longitude, Airport code or weatherundergound pws ID (see http://www.wunderground.com/weather/api/d/docs?d=data/index)",
-   "title" : "WeatherUndergound module",
+   "m_title" : "WeatherUndergound module",
    "unit_system" : "Unit System",
    "unit_system_imperial" : "Imperial",
    "unit_system_metric" : "Metric",

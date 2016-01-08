@@ -3,10 +3,10 @@
    "category" : "environment",
    "defaults" : {
       "apiKey" : "",
-      "description" : "__description__",
+      "description" : "__m_descr__",
       "interval" : 60,
       "location" : "autoip",
-      "title" : "__title__",
+      "title" : "__m_title__",
       "unitSystem" : "metric",
       "unitTemperature" : "celsius"
    },
