@@ -29,7 +29,7 @@ _module = WeatherUnderground;
 // --- Module instance initialized
 // ----------------------------------------------------------------------------
 
-WeatherUnderground.prototype.deviceTypes = ['wind','uv','humidity','barometer'];
+WeatherUnderground.prototype.deviceTypes = ['wind','uv','humidity','barometer','forecastLow','forecastHigh'];
 WeatherUnderground.prototype.windBeaufort = [
     1.1,    // 0
     5.5,
@@ -56,31 +56,45 @@ WeatherUnderground.prototype.init = function (config) {
 
     var self = this;
     
-    this.location           = config.location.toString();
-    this.apiKey             = config.apiKey.toString();
-    this.unitTemperature    = config.unitTemperature.toString();
-    this.unitSystem         = config.unitSystem.toString();
-    this.langFile           = self.controller.loadModuleLang("WeatherUnderground");
+    self.location           = config.location.toString();
+    self.apiKey             = config.apiKey.toString();
+    self.unitTemperature    = config.unitTemperature.toString();
+    self.unitSystem         = config.unitSystem.toString();
+    self.langFile           = self.controller.loadModuleLang("WeatherUnderground");
+    var scaleTemperature    = self.unitTemperature === "celsius" ? '°C' : '°F';
     
-    _.each(self.deviceTypes,function(deviceType) {
-        var key = deviceType+'_device';
-        self[deviceType+'Device'] = (typeof(self.config[key]) === 'undefined' ? true:self.config[key]);
-    });
-
     self.addDevice('current',{
         probeTitle: 'WeatherUndergoundCurrent',
-        scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
+        scaleTitle: scaleTemperature,
         title: self.langFile.current,
         timestamp: 0
     });
     
     self.addDevice('forecast',{
         probeTitle: 'WeatherUndergoundForecast',
-        scaleTitle: config.unitTemperature === "celsius" ? '°C' : '°F',
+        scaleTitle: scaleTemperature,
         title: self.langFile.forecast
     });
     
-    if (self.humidityDevice) {
+    if (self.config.forecastLowDevice === true) {
+        self.addDevice('forecastLow',{
+            probeTitle: 'Temperature',
+            icon: 'temperature',
+            scaleTitle: scaleTemperature,
+            title: self.langFile.forecastLow
+        });
+    }
+    
+    if (self.config.forecastHighDevice === true) {
+        self.addDevice('forecastHigh',{
+            probeTitle: 'Temperature',
+            icon: 'temperature',
+            scaleTitle: scaleTemperature,
+            title: self.langFile.forecastHigh
+        });
+    }
+    
+    if (self.config.humidityDevice === true) {
         self.addDevice('humidity',{
             probeTitle: 'Humidity',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/humidity.png',
@@ -89,7 +103,7 @@ WeatherUnderground.prototype.init = function (config) {
         });
     }
     
-    if (self.windDevice) {
+    if (self.config.windDevice === true) {
         self.addDevice('wind',{
             probeTitle: 'Wind',
             scaleTitle: config.unitSystem === "metric" ? 'km/h' : 'mph',
@@ -97,7 +111,7 @@ WeatherUnderground.prototype.init = function (config) {
         });
     }
     
-    if (self.uvDevice) { 
+    if (self.config.uvDevice === true) { 
         self.addDevice('uv',{
             probeTitle: 'Ultraviolet',
             icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
@@ -105,7 +119,7 @@ WeatherUnderground.prototype.init = function (config) {
         });
     }
 
-    if (self.barometerDevice) {
+    if (self.config.barometerDevice === true) {
         self.addDevice('barometer',{
             probeTitle: 'BarometricPressure',
             scaleTitle: config.unitSystem === "metric" ? 'hPa' : 'inHg',
@@ -113,7 +127,6 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.barometer
         });
     }
-     
     
     var currentTime     = (new Date()).getTime();
     var currentLevel    = self.devices.current.get('metrics:level');
@@ -152,10 +165,17 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
     var self = this;
     
     var probeTitle = defaults.probeTitle;
+    var scaleTitle = defaults.scaleTitle || '';
+    delete defaults.probeTitle;
+    delete defaults.scaleTitle;
+    
     var deviceParams = {
         overlay: { 
             deviceType: "sensorMultilevel",
-            metrics: { probeTitle: probeTitle }
+            metrics: { 
+                probeTitle: probeTitle,
+                scaleTitle: scaleTitle
+            }
         },
         defaults: {
             metrics: defaults
@@ -163,6 +183,8 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
         deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
         moduleId: prefix+"_"+this.id
     };
+    
+    console.logJS(deviceParams);
     
     self.devices[prefix] = self.controller.devices.create(deviceParams);
     return self.devices[prefix];
@@ -248,7 +270,6 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.current.set("metrics:timestamp",currentDate.getTime());
     self.devices.current.set("metrics:percipintensity",percipIntensity);
     
-    
     // Handle forecast
     var forecastHigh = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
     var forecastLow = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
@@ -263,13 +284,21 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.forecast.set("metrics:low",forecastLow);
     self.devices.forecast.set("metrics:raw",forecast);
     
+    // Forecast low/high humidity
+    if (self.config.forecastLowDevice === true) {
+        self.devices.forecastLow.set("metrics:level", forecastLow);
+    }
+    if (self.config.forecastHighDevice === true) {
+        self.devices.forecastHigh.set("metrics:level", forecastHigh);
+    }
+    
     // Handle humidity
-    if (self.humidityDevice) {
+    if (self.config.humidityDevice === true) {
         self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity,10));
     }
     
     // Handle wind
-    if (self.windDevice) {
+    if (self.config.windDevice === true) {
         var windKph = parseInt(current.wind_kph,10);
         var windKphGust = parseInt(current.wind_gust_mph,10);
         var windMph = parseInt(current.wind_kph,10);
@@ -295,7 +324,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     }
     
     // Handle humidity
-    if (self.uvDevice) {
+    if (self.config.uvDevice === true) {
         var uv = parseInt(current.UV,10);
         var solarradiation = parseInt(current.solarradiation,10);
         self.averageSet(self.devices.uv,'solarradiation',solarradiation);
@@ -305,7 +334,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     }
 
     // Handle barometer
-    if (self.barometerDevice) {
+    if (self.config.barometerDevice === true) {
         var pressure = parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in);
         self.devices.barometer.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/barometer"+current.pressure_trend+".png");
         self.devices.barometer.set('metrics:level',pressure);
