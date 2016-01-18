@@ -21,17 +21,17 @@
             "label" : "__api_key__",
             "order" : 2
          },
-         "forecastLowDevice" : {
-             "label" : "__forecast_low_device_label__",
-             "order" : 10
-          },
-          "forecastHighDevice" : {
-              "label" : "__forecast_high_device_label__",
-              "order" : 11
-           },
          "barometerDevice" : {
             "label" : "__barometer_device_label__",
             "order" : 9
+         },
+         "forecastHighDevice" : {
+            "label" : "__forecast_high_device_label__",
+            "order" : 11
+         },
+         "forecastLowDevice" : {
+            "label" : "__forecast_low_device_label__",
+            "order" : 10
          },
          "humidityDevice" : {
             "label" : "__humidity_device_label__",
@@ -87,14 +87,14 @@
             "default" : true,
             "type" : "boolean"
          },
+         "forecastHighDevice" : {
+            "default" : false,
+            "type" : "boolean"
+         },
          "forecastLowDevice" : {
-             "default" : false,
-             "type" : "boolean"
-          },
-          "forecastHighDevice" : {
-              "default" : false,
-              "type" : "boolean"
-           },
+            "default" : false,
+            "type" : "boolean"
+         },
          "humidityDevice" : {
             "default" : true,
             "type" : "boolean"
@@ -133,5 +133,5 @@
       "type" : "object"
    },
    "singleton" : true,
-   "version" : 1.07
+   "version" : 1.08
 }
