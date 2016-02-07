@@ -23,5 +23,6 @@
    "uv" : "UV Index",
    "uv_device_label" : "UV Index Modul",
    "wind" : "Wind",
-   "wind_device_label" : "Wind Modul"
+   "wind_device_label" : "Wind Modul",
+   "error_fetch": "Konnte Wetterdaten nicht von WeatherUnderground laden."
 }
