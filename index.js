@@ -66,8 +66,7 @@ WeatherUnderground.prototype.init = function (config) {
     self.addDevice('current',{
         probeTitle: 'WeatherUndergoundCurrent',
         scaleTitle: scaleTemperature,
-        title: self.langFile.current,
-        timestamp: 0
+        title: self.langFile.current
     });
     
     self.addDevice('forecast',{
