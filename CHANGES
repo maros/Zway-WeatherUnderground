@@ -1,3 +1,10 @@
+1.09 2016 Feb 24, Wed
+    * Load data on first init
+    * Remove unused default
+    * Fix HTTP error reporting
+    * Update doc link
+    * Add doc link
+
 1.08 2016 Jan 18, Mon
     * Add forecast low/high temp devices
     * Rename title/description key to make module work in appstore
