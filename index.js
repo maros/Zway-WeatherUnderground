@@ -136,9 +136,13 @@ WeatherUnderground.prototype.init = function (config) {
         self.fetchWeather(self);
     }, intervalTime);
     
-    console.log('[WeatherUnderground] Last update time '+updateTime);
-    if ((updateTime + intervalTime / 3) < currentTime) {
+    if (typeof(updateTime) === 'undefined') {
         self.fetchWeather(self);
+    } else {
+        console.log('[WeatherUnderground] Last update time '+updateTime);
+        if ((updateTime + intervalTime / 3) < currentTime) {
+            self.fetchWeather(self);
+        }
     }
 };
 
