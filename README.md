@@ -16,7 +16,7 @@ Accepts any format that constitutes a valid API query.
 *   COUNTRY/CITY (eg. "Austria/Vienna")
 *   pws:PWSID (personal weather station ID, eg. "pws:IWIEN335")
 *   "autoip" (based on geo ip)
-*   LAT,LNG (eg. "48.21,lon=16.40")
+*   LAT,LNG (eg. "48.214,16.401")
 
 ## unitTemperature
 

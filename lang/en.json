@@ -13,7 +13,7 @@
    "interval_helper" : "Specifies weather data refresh interval in minutes",
    "interval_label" : "Refresh interval",
    "location" : "Location",
-   "location_helper" : "Either Country/City, Latitude-Longitude, Airport code or weatherundergound pws ID (see http://www.wunderground.com/weather/api/d/docs?d=data/index)",
+   "location_helper" : "Either 'Country/City', 'Latitude,Longitude', 'Airportcode' or 'pws:WeatherundergoundPwsID' (see query sesion in http://www.wunderground.com/weather/api/d/docs?d=data/index)",
    "m_descr" : "Fetches detailed weather data from www.wunderground.com. Creates up to eight virtual devices for humidity, pressure, current conditions, wind, solar radiation and (high/low/condition) forecasts.<br>Check <a href=https://github.com/maros/Zway-WeatherUnderground/blob/master/README.md>github.com/maros/Zway-WeatherUnderground</a> for detailed documentation.",
    "m_title" : "WeatherUndergound module",
    "unit_system" : "Unit System",
