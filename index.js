@@ -192,8 +192,6 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
         moduleId: prefix+"_"+this.id
     };
     
-    console.logJS(deviceParams);
-    
     self.devices[prefix] = self.controller.devices.create(deviceParams);
     return self.devices[prefix];
 };
