@@ -18,6 +18,7 @@ function WeatherUnderground (id, controller) {
     this.unitTemperature    = undefined;
     this.unitSystem         = undefined;
     this.timer              = undefined;
+    this.update             = undefined;
     this.devices            = {};
 }
 
@@ -163,6 +164,10 @@ WeatherUnderground.prototype.stop = function () {
         self.devices = {};
     }
     
+    if (typeof(self.update) !== 'undefined') {
+        clearTimeout(self.update);
+    }
+    
     WeatherUnderground.super_.prototype.stop.call(this);
 };
 
@@ -189,7 +194,15 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
             metrics: defaults
         },
         deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
-        moduleId: prefix+"_"+this.id
+        moduleId: prefix+"_"+this.id,
+        handles: function(command) {
+            if (command === 'update') {
+                if (typeof(self.update) !== 'undefined') {
+                    clearTimeout(self.update);
+                }
+                self.update = setTimeout(_bind(self.fetchWeather,self),10*1000);
+            }
+        }
     };
     
     self.devices[prefix] = self.controller.devices.create(deviceParams);
@@ -202,6 +215,10 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
 
 WeatherUnderground.prototype.fetchWeather = function () {
     var self = this;
+    
+    if (typeof(self.update) !== 'undefined') {
+        clearTimeout(self.update);
+    }
     
     var url = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
     
