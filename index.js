@@ -195,7 +195,7 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
         },
         deviceId: "WeatherUnderground_"+prefix+"_" + this.id,
         moduleId: prefix+"_"+this.id,
-        handles: function(command) {
+        handler: function(command) {
             if (command === 'update') {
                 if (typeof(self.update) !== 'undefined') {
                     clearTimeout(self.update);
