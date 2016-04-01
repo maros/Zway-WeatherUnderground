@@ -202,7 +202,7 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
                 if (typeof(self.update) !== 'undefined') {
                     clearTimeout(self.update);
                 }
-                self.update = setTimeout(_bind(self.fetchWeather,self),10*1000);
+                self.update = setTimeout(_.bind(self.fetchWeather,self),10*1000);
             }
         }
     };
