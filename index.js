@@ -65,7 +65,7 @@ WeatherUnderground.prototype.init = function (config) {
     var scaleTemperature    = self.unitTemperature === "celsius" ? '°C' : '°F';
     
     self.addDevice('current',{
-        probeType: 'temperature',
+        probeType: 'condition',
         probeTitle: 'WeatherUndergoundCurrent',
         scaleTitle: scaleTemperature,
         title: self.langFile.current
@@ -275,10 +275,13 @@ WeatherUnderground.prototype.processResponse = function(response) {
         ) ? 'day':'night';
     
     // Handle current state
-    var currentTemperature = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
-    var currentHigh        = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
-    var currentLow         = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
-    var percipIntensity    = parseFloat(self.config.unitSystem === "metric" ? current.precip_1hr_metric : current.precip_1hr_in);
+    var currentTemperature  = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
+    var currentHigh         = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
+    var currentLow          = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
+    var percipIntensity     = parseFloat(self.config.unitSystem === "metric" ? current.precip_1hr_metric : current.precip_1hr_in);
+    var uv                  = parseInt(current.UV,10);
+    var solarradiation      = parseInt(current.solarradiation,10);
+
 
     self.devices.current.set("metrics:conditiongroup",self.transformCondition(current.icon));
     self.devices.current.set("metrics:condition",current.icon);
@@ -294,6 +297,8 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.current.set("metrics:raw",current);
     self.devices.current.set("metrics:timestamp",currentDate.getTime());
     self.devices.current.set("metrics:percipintensity",percipIntensity);
+    self.devices.current.set("metrics:uv",uv);
+    self.devices.current.set("metrics:solarradiation",solarradiation);
     
     // Handle forecast
     var forecastHigh = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
@@ -350,8 +355,6 @@ WeatherUnderground.prototype.processResponse = function(response) {
     
     // Handle humidity
     if (self.config.uvDevice === true) {
-        var uv = parseInt(current.UV,10);
-        var solarradiation = parseInt(current.solarradiation,10);
         self.averageSet(self.devices.uv,'solarradiation',solarradiation);
         self.devices.uv.set("metrics:solarradiation",solarradiation);
         self.averageSet(self.devices.uv,'uv',uv);
