@@ -281,8 +281,18 @@ WeatherUnderground.prototype.processResponse = function(response) {
     var percipIntensity     = parseFloat(self.config.unitSystem === "metric" ? current.precip_1hr_metric : current.precip_1hr_in);
     var uv                  = parseInt(current.UV,10);
     var solarradiation      = parseInt(current.solarradiation,10);
-
-
+    var temperatureList     = self.listSet(self.devices.current,"temperature",currentTemperature,3);
+    var temperatureDiff     = _.last(temperatureList) - _.first(temperatureList);
+    var changeTemperature   = 'unchanged';
+    if (Math.abs(temperatureDiff) > 0.1) {
+        if (previousTemperature > 1) {
+            changeTemperature = 'rise';
+        } else {
+            changeTemperature = 'fall';
+        }
+    }
+    self.devices.current.set("metrics:temperatureChange",changeTemperature);
+    
     self.devices.current.set("metrics:conditiongroup",self.transformCondition(current.icon));
     self.devices.current.set("metrics:condition",current.icon);
     //self.devices.current.set("metrics:title",current.weather);
@@ -384,19 +394,22 @@ WeatherUnderground.prototype.transformCondition = function(condition) {
     return 'unknown';
 };
 
-WeatherUnderground.prototype.averageSet = function(deviceObject,key,value,count) {
-    count = count || 3;
-    var list = deviceObject.get('metrics:'+key+'_list') || [];
+WeatherUnderground.prototype.listSet = function(deviceObject,key,value,count) {
+    var varKey = 'metrics:'+key+'_list';
+    var list = deviceObject.get(varKey) || [];
     list.unshift(value);
     while (list.length > count) {
         list.pop();
     }
+    deviceObject.set(varKey,list);
+    return list;
+};
+
+WeatherUnderground.prototype.averageSet = function(deviceObject,key,value,count) {
+    var list = this.listSet(deviceObject,key,value,count);
     var sum = _.reduce(list, function(i,j){ return i + j; }, 0);
     var avg = sum / list.length;
-
-    deviceObject.set('metrics:'+key+'_list',list);
     deviceObject.set('metrics:'+key+'_avg',avg);
-    
     return avg;
 };
 
