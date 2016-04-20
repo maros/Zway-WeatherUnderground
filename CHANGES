@@ -1,3 +1,13 @@
+1.1 2016 Apr 21, Thu
+    * Temperature falling or rising
+    * Minor fixups
+    * Delay initial weather fetch to speed up startup
+    * Handle manual weather updates
+    * Set probeType
+    * Clarify config, fix typos
+    * Clarify location config option
+    * Update installation howto
+
 1.09 2016 Feb 24, Wed
     * Load data on first init
     * Remove unused default
