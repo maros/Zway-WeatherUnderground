@@ -2,13 +2,17 @@
    "author" : "Maroš Kollár",
    "category" : "environment",
    "defaults" : {
-      "apiKey" : "",
       "description" : "__m_descr__",
       "interval" : 60,
       "location" : "autoip",
       "title" : "__m_title__",
       "unitSystem" : "metric",
-      "unitTemperature" : "celsius"
+      "unitTemperature" : "celsius",
+      "barometerDevice": true,
+      "forecastHighDevice": true,
+      "forecastLowDevice": true,
+      "uvDevice": true,
+      "solarDevice": true
    },
    "dependencies" : [],
    "homepage" : "https://github.com/maros/Zway-WeatherUnderground/",
@@ -84,19 +88,15 @@
             "type" : "string"
          },
          "barometerDevice" : {
-            "default" : true,
             "type" : "boolean"
          },
          "forecastHighDevice" : {
-            "default" : false,
             "type" : "boolean"
          },
          "forecastLowDevice" : {
-            "default" : false,
             "type" : "boolean"
          },
          "humidityDevice" : {
-            "default" : true,
             "type" : "boolean"
          },
          "interval" : {
@@ -121,11 +121,9 @@
             "required" : true
          },
          "uvDevice" : {
-            "default" : true,
             "type" : "boolean"
          },
          "windDevice" : {
-            "default" : true,
             "type" : "boolean"
          }
       },
