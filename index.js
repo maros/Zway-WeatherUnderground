@@ -116,7 +116,7 @@ WeatherUnderground.prototype.init = function (config) {
     if (self.config.uvDevice === true) { 
         self.addDevice('uv',{
             probeType: 'ultraviolet',
-            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
+            icon: 'ultraviolet',
             title: self.langFile.uv
         });
     }
@@ -125,7 +125,7 @@ WeatherUnderground.prototype.init = function (config) {
         self.addDevice('solar',{
             probeType: 'solar',
             scaleTitle: 'Watt / m²',
-            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
+            icon: 'ultraviolet',
             title: self.langFile.solar
         });
     }
@@ -381,7 +381,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     // Handle solar intensity
     if (self.config.solarDevice === true) {
         self.averageSet(self.devices.solar,'solarradiation',solarradiation);
-        self.devices.solar.set("metrics:solarradiation",solarradiation);
+        self.devices.solar.set("metrics:level",solarradiation);
     }
     
     // Handle barometer
