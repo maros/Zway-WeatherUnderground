@@ -3,6 +3,7 @@
    "barometer" : "Barometer",
    "barometer_device_label" : "Barometer Modul",
    "current" : "Wetter",
+   "error_fetch" : "Wetterdaten konnten nicht von WeatherUnderground laden.",
    "forecast" : "Vorhersage",
    "forecastHigh" : "Vorhersage Höchstwert",
    "forecastLow" : "Vorhersage Tiefstwert",
@@ -16,6 +17,8 @@
    "location_helper" : "Entweder im Format 'Land/Stadt', 'Breite,Länge', 'Flughafencode' oder 'pws:WeatherundergoundPwsID' (siehe query in http://www.wunderground.com/weather/api/d/docs?d=data/index)",
    "m_descr" : "Dieses Modul holt aktuelle Wetterdaten und Vorhersagen von wunderground.com. Es wird je ein Modul für die aktuellen Wetterbedingungen, die Vorhersage, Windbedingungen, UV Index und den Luftdruck angelegt.<br>Siehe <a href=https://github.com/maros/Zway-WeatherUnderground/blob/master/README.md>github.com/maros/Zway-WeatherUnderground</a> für detailliertere Dokumentation.",
    "m_title" : "WeatherUndergound Weather",
+   "solar" : "Sonnen Intensität",
+   "solar_device_label" : "Sonnen Intensität Modul",
    "unit_system" : "Maßeinheiten",
    "unit_system_imperial" : "Angloamerikanisch",
    "unit_system_metric" : "Metrisch",
@@ -23,7 +26,5 @@
    "uv" : "UV Index",
    "uv_device_label" : "UV Index Modul",
    "wind" : "Wind",
-   "wind_device_label" : "Wind Modul",
-   "error_fetch": "Wetterdaten konnten nicht von WeatherUnderground laden.",
-   "solar": "Sonnen Intensität"
+   "wind_device_label" : "Wind Modul"
 }
