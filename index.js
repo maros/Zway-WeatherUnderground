@@ -263,7 +263,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     sunset.minute   = parseInt(sunset.minute,10);
     sunrise.hour    = parseInt(sunrise.hour,10);
     sunrise.minute  = parseInt(sunrise.minute,10);
-    //console.logJS(response.data);
+    console.logJS(response.data);
     
     var daynight = (
             currentDate.getHours() > sunrise.hour 
@@ -410,6 +410,7 @@ WeatherUnderground.prototype.transformCondition = function(condition) {
 WeatherUnderground.prototype.listSet = function(deviceObject,key,value,count) {
     var varKey = 'metrics:'+key+'_list';
     var list = deviceObject.get(varKey) || [];
+    count = count || 4;
     list.unshift(value);
     while (list.length > count) {
         list.pop();
