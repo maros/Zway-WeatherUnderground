@@ -24,5 +24,6 @@
    "uv_device_label" : "UV Index device",
    "wind" : "Wind",
    "wind_device_label" : "Wind device",
-   "error_fetch": "Could not load weather data from WeatherUnderground."
+   "error_fetch": "Could not load weather data from WeatherUnderground.",
+   "solar": "Solar intensity"
 }

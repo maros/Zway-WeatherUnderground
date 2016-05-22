@@ -24,5 +24,6 @@
    "uv_device_label" : "UV Index Modul",
    "wind" : "Wind",
    "wind_device_label" : "Wind Modul",
-   "error_fetch": "Wetterdaten konnten nicht von WeatherUnderground laden."
+   "error_fetch": "Wetterdaten konnten nicht von WeatherUnderground laden.",
+   "solar": "Sonnen Intensität"
 }

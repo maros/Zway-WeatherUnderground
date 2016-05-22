@@ -120,7 +120,16 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.uv
         });
     }
-
+    
+    if (self.config.solarDevice === true) { 
+        self.addDevice('solar',{
+            probeType: 'solar',
+            scaleTitle: 'Watt / m²',
+            icon: '/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/uv.png',
+            title: self.langFile.solar
+        });
+    }
+    
     if (self.config.barometerDevice === true) {
         self.addDevice('barometer',{
             probeType: 'barometer',
@@ -363,14 +372,18 @@ WeatherUnderground.prototype.processResponse = function(response) {
         self.averageSet(self.devices.wind,'wind',(self.config.unitSystem === "metric" ? windKph : windMph));
     }
     
-    // Handle humidity
+    // Handle UV
     if (self.config.uvDevice === true) {
-        self.averageSet(self.devices.uv,'solarradiation',solarradiation);
-        self.devices.uv.set("metrics:solarradiation",solarradiation);
         self.averageSet(self.devices.uv,'uv',uv);
         self.devices.uv.set("metrics:level", uv);
     }
-
+    
+    // Handle solar intensity
+    if (self.config.solarDevice === true) {
+        self.averageSet(self.devices.solar,'solarradiation',solarradiation);
+        self.devices.solar.set("metrics:solarradiation",solarradiation);
+    }
+    
     // Handle barometer
     if (self.config.barometerDevice === true) {
         var pressure = parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in);

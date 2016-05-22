@@ -27,15 +27,15 @@
          },
          "barometerDevice" : {
             "label" : "__barometer_device_label__",
-            "order" : 9
+            "order" : 10
          },
          "forecastHighDevice" : {
             "label" : "__forecast_high_device_label__",
-            "order" : 11
+            "order" : 12
          },
          "forecastLowDevice" : {
             "label" : "__forecast_low_device_label__",
-            "order" : 10
+            "order" : 11
          },
          "humidityDevice" : {
             "label" : "__humidity_device_label__",
@@ -71,9 +71,13 @@
             "label" : "__uv_device_label__",
             "order" : 7
          },
+         "solarDevice" : {
+            "label" : "__solar_device_label__",
+            "order" : 7
+         },
          "windDevice" : {
             "label" : "__wind_device_label__",
-            "order" : 8
+            "order" : 9
          }
       }
    },
@@ -121,6 +125,9 @@
             "required" : true
          },
          "uvDevice" : {
+            "type" : "boolean"
+         },
+         "solarDevice" : {
             "type" : "boolean"
          },
          "windDevice" : {
