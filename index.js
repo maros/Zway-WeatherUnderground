@@ -124,7 +124,7 @@ WeatherUnderground.prototype.init = function (config) {
     if (self.config.solarDevice === true) { 
         self.addDevice('solar',{
             probeType: 'solar',
-            scaleTitle: 'Watt / m²',
+            scaleTitle: 'Watt/m²',
             icon: 'ultraviolet',
             title: self.langFile.solar
         });
