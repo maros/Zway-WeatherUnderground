@@ -290,7 +290,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     var percipIntensity     = parseFloat(self.config.unitSystem === "metric" ? current.precip_1hr_metric : current.precip_1hr_in);
     var uv                  = parseInt(current.UV,10);
     var solarradiation      = parseInt(current.solarradiation,10);
-    var temperatureList     = self.listSet(self.devices.current,"temperature",currentTemperature,3);
+    var temperatureList     = self.listSet(self.devices.current,"temperature_list",currentTemperature,3);
     var temperatureDiff     = _.last(temperatureList) - _.first(temperatureList);
     var changeTemperature   = 'unchanged';
     if (Math.abs(temperatureDiff) > 0.1) {
@@ -363,25 +363,22 @@ WeatherUnderground.prototype.processResponse = function(response) {
             return beaufort < check;
         });
         self.devices.wind.set("metrics:icon", "/ZAutomation/api/v1/load/modulemedia/WeatherUnderground/wind"+icon+".png");
-        self.devices.wind.set("metrics:level", (self.config.unitSystem === "metric" ? windKph : windMph));
         self.devices.wind.set("metrics:dir", current.wind_dir);
         self.devices.wind.set("metrics:wind", parseFloat(self.config.unitSystem === "metric" ? current.wind_kph : current.wind_mph));
         self.devices.wind.set("metrics:windgust", parseFloat(self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
         self.devices.wind.set("metrics:winddregrees", parseFloat(current.wind_degrees));
         self.devices.wind.set("metrics:beaufort",beaufort);
-        self.averageSet(self.devices.wind,'wind',(self.config.unitSystem === "metric" ? windKph : windMph));
+        self.averageSet(self.devices.wind,(self.config.unitSystem === "metric" ? windKph : windMph));
     }
     
     // Handle UV
     if (self.config.uvDevice === true) {
-        self.averageSet(self.devices.uv,'uv',uv);
-        self.devices.uv.set("metrics:level", uv);
+        self.averageSet(self.devices.uv,uv);
     }
     
     // Handle solar intensity
     if (self.config.solarDevice === true) {
-        self.averageSet(self.devices.solar,'solarradiation',solarradiation);
-        self.devices.solar.set("metrics:level",solarradiation);
+        self.averageSet(self.devices.solar,solarradiation);
     }
     
     // Handle barometer
@@ -408,9 +405,9 @@ WeatherUnderground.prototype.transformCondition = function(condition) {
 };
 
 WeatherUnderground.prototype.listSet = function(deviceObject,key,value,count) {
-    var varKey = 'metrics:'+key+'_list';
+    var varKey = 'metrics:'+key;
     var list = deviceObject.get(varKey) || [];
-    count = count || 4;
+    count = count || 3;
     list.unshift(value);
     while (list.length > count) {
         list.pop();
@@ -419,11 +416,12 @@ WeatherUnderground.prototype.listSet = function(deviceObject,key,value,count) {
     return list;
 };
 
-WeatherUnderground.prototype.averageSet = function(deviceObject,key,value,count) {
-    var list = this.listSet(deviceObject,key,value,count);
+WeatherUnderground.prototype.averageSet = function(deviceObject,value,count) {
+    var list = this.listSet(deviceObject,'list',value,count);
     var sum = _.reduce(list, function(i,j){ return i + j; }, 0);
     var avg = sum / list.length;
-    deviceObject.set('metrics:'+key+'_avg',avg);
+    deviceObject.set('metrics:current',avg);
+    deviceObject.set('metrics:level',avg);
     return avg;
 };
 
