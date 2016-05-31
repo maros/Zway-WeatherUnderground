@@ -1,6 +1,6 @@
 /*** WeatherUnderground Z-Way HA module *******************************************
 
-Version: 1.1
+Version: 1.11
 (c) Maroš Kollár, 2015
 -----------------------------------------------------------------------------
 Author: Maroš Kollár <maros@k-1.com>

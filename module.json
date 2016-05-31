@@ -2,17 +2,17 @@
    "author" : "Maroš Kollár",
    "category" : "environment",
    "defaults" : {
+      "barometerDevice" : true,
       "description" : "__m_descr__",
+      "forecastHighDevice" : true,
+      "forecastLowDevice" : true,
       "interval" : 60,
       "location" : "autoip",
+      "solarDevice" : true,
       "title" : "__m_title__",
       "unitSystem" : "metric",
       "unitTemperature" : "celsius",
-      "barometerDevice": true,
-      "forecastHighDevice": true,
-      "forecastLowDevice": true,
-      "uvDevice": true,
-      "solarDevice": true
+      "uvDevice" : true
    },
    "dependencies" : [],
    "homepage" : "https://github.com/maros/Zway-WeatherUnderground/",
@@ -51,6 +51,10 @@
             "label" : "__location__",
             "order" : 1
          },
+         "solarDevice" : {
+            "label" : "__solar_device_label__",
+            "order" : 7
+         },
          "unitSystem" : {
             "label" : "__unit_system__",
             "optionLabels" : [
@@ -69,10 +73,6 @@
          },
          "uvDevice" : {
             "label" : "__uv_device_label__",
-            "order" : 7
-         },
-         "solarDevice" : {
-            "label" : "__solar_device_label__",
             "order" : 7
          },
          "windDevice" : {
@@ -110,6 +110,9 @@
          "location" : {
             "type" : "string"
          },
+         "solarDevice" : {
+            "type" : "boolean"
+         },
          "unitSystem" : {
             "enum" : [
                "metric",
@@ -127,9 +130,6 @@
          "uvDevice" : {
             "type" : "boolean"
          },
-         "solarDevice" : {
-            "type" : "boolean"
-         },
          "windDevice" : {
             "type" : "boolean"
          }
@@ -138,5 +138,5 @@
       "type" : "object"
    },
    "singleton" : true,
-   "version" : 1.1
+   "version" : "1.11"
 }
