@@ -241,10 +241,10 @@ WeatherUnderground.prototype.fetchWeather = function () {
             console.error("[WeatherUnderground] Update error: "+response.statusText);
             console.logJS(response);
             self.controller.addNotification(
-                "error", 
-                self.langFile.error_fetch, 
-                "module", 
-                "WeatherUnderground"
+                "error",
+                self.langFile.error_fetch,
+                "module",
+                self.constructor.name
             );
         }
     });
@@ -353,9 +353,10 @@ WeatherUnderground.prototype.processResponse = function(response) {
         var windMph = parseInt(current.wind_kph,10);
         var windMphGust = parseInt(current.wind_gust_mph,10);
         if (windKphGust > windKph) {
-            windKph = (windKph + windKphGust) / 2;
-            windMph = (windMph + windMphGust) / 2;
+            windKph = windKph + (windKphGust - windKph) / 2;
+            windMph = windKph + (windMphGust - windMph) / 2;
         }
+        var currentWind = self.config.unitSystem === "metric" ? windKph : windMph;
         var beaufort = _.findIndex(self.windBeaufort,function(check) {
             return windKph < check;
         });
@@ -368,17 +369,18 @@ WeatherUnderground.prototype.processResponse = function(response) {
         self.devices.wind.set("metrics:windgust", parseFloat(self.config.unitSystem === "metric" ? current.wind_gust_kph : current.wind_gust_mph));
         self.devices.wind.set("metrics:winddregrees", parseFloat(current.wind_degrees));
         self.devices.wind.set("metrics:beaufort",beaufort);
-        self.averageSet(self.devices.wind,(self.config.unitSystem === "metric" ? windKph : windMph));
+        //var windList = self.listSet(self.devices.wind,"wind_list",currentWind,3);
+        self.averageSet(self.devices.wind,currentWind,3);
     }
 
     // Handle UV
     if (self.config.uvDevice === true) {
-        self.averageSet(self.devices.uv,uv);
+        self.averageSet(self.devices.uv,uv,3);
     }
 
     // Handle solar intensity
     if (self.config.solarDevice === true) {
-        self.averageSet(self.devices.solar,solarradiation);
+        self.averageSet(self.devices.solar,solarradiation,3);
     }
 
     // Handle barometer
