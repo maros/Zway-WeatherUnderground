@@ -12,7 +12,7 @@ Description:
 function WeatherUnderground (id, controller) {
     // Call superconstructor first (AutomationModule)
     WeatherUnderground.super_.call(this, id, controller);
-    
+
     this.location           = undefined;
     this.apiKey             = undefined;
     this.unitTemperature    = undefined;
@@ -56,28 +56,28 @@ WeatherUnderground.prototype.init = function (config) {
     WeatherUnderground.super_.prototype.init.call(this, config);
 
     var self = this;
-    
+
     self.location           = config.location.toString();
     self.apiKey             = config.apiKey.toString();
     self.unitTemperature    = config.unitTemperature.toString();
     self.unitSystem         = config.unitSystem.toString();
     self.langFile           = self.controller.loadModuleLang("WeatherUnderground");
     var scaleTemperature    = self.unitTemperature === "celsius" ? '°C' : '°F';
-    
+
     self.addDevice('current',{
         probeType: 'condition',
         probeTitle: 'WeatherUndergoundCurrent',
         scaleTitle: scaleTemperature,
         title: self.langFile.current
     });
-    
+
     self.addDevice('forecast',{
         probeType: 'forecast_range',
         probeTitle: 'WeatherUndergoundForecast',
         scaleTitle: scaleTemperature,
         title: self.langFile.forecast
     });
-    
+
     if (self.config.forecastLowDevice === true) {
         self.addDevice('forecastLow',{
             probeType: 'forecast_low',
@@ -86,7 +86,7 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.forecastLow
         });
     }
-    
+
     if (self.config.forecastHighDevice === true) {
         self.addDevice('forecastHigh',{
             probeType: 'forecast_high',
@@ -95,7 +95,7 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.forecastHigh
         });
     }
-    
+
     if (self.config.humidityDevice === true) {
         self.addDevice('humidity',{
             probeType: 'humidity',
@@ -104,7 +104,7 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.humidity
         });
     }
-    
+
     if (self.config.windDevice === true) {
         self.addDevice('wind',{
             probeType: 'wind',
@@ -112,16 +112,16 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.wind
         });
     }
-    
-    if (self.config.uvDevice === true) { 
+
+    if (self.config.uvDevice === true) {
         self.addDevice('uv',{
             probeType: 'ultraviolet',
             icon: 'ultraviolet',
             title: self.langFile.uv
         });
     }
-    
-    if (self.config.solarDevice === true) { 
+
+    if (self.config.solarDevice === true) {
         self.addDevice('solar',{
             probeType: 'solar',
             scaleTitle: 'Watt/m²',
@@ -129,7 +129,7 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.solar
         });
     }
-    
+
     if (self.config.barometerDevice === true) {
         self.addDevice('barometer',{
             probeType: 'barometer',
@@ -138,16 +138,16 @@ WeatherUnderground.prototype.init = function (config) {
             title: self.langFile.barometer
         });
     }
-    
+
     var currentTime     = (new Date()).getTime();
     var currentLevel    = self.devices.current.get('metrics:level');
     var updateTime      = self.devices.current.get('metrics:timestamp');
     var intervalTime    = parseInt(self.config.interval,10) * 60 * 1000;
-    
+
     self.timer = setInterval(function() {
         self.fetchWeather(self);
     }, intervalTime);
-    
+
     setTimeout(function() {
         if (typeof(updateTime) === 'undefined') {
             self.fetchWeather(self);
@@ -162,41 +162,41 @@ WeatherUnderground.prototype.init = function (config) {
 
 WeatherUnderground.prototype.stop = function () {
     var self = this;
-    
+
     if (self.timer) {
         clearInterval(self.timer);
         self.timer = undefined;
     }
-    
+
     if (typeof(self.devices) !== 'undefined') {
         _.each(self.devices,function(value, key) {
             self.controller.devices.remove(value.id);
         });
         self.devices = {};
     }
-    
+
     if (typeof(self.update) !== 'undefined') {
         clearTimeout(self.update);
     }
-    
+
     WeatherUnderground.super_.prototype.stop.call(this);
 };
 
 WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
     var self = this;
-    
+
     var probeTitle  = defaults.probeTitle || '';
     var scaleTitle  = defaults.scaleTitle || '';
     var probeType   = defaults.probeType || prefix;
     delete defaults.probeType;
     delete defaults.probeTitle;
     delete defaults.scaleTitle;
-    
+
     var deviceParams = {
-        overlay: { 
+        overlay: {
             deviceType: "sensorMultilevel",
             probeType: probeType,
-            metrics: { 
+            metrics: {
                 probeTitle: probeTitle,
                 scaleTitle: scaleTitle
             }
@@ -215,7 +215,7 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
             }
         }
     };
-    
+
     self.devices[prefix] = self.controller.devices.create(deviceParams);
     return self.devices[prefix];
 };
@@ -226,13 +226,13 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
 
 WeatherUnderground.prototype.fetchWeather = function () {
     var self = this;
-    
+
     if (typeof(self.update) !== 'undefined') {
         clearTimeout(self.update);
     }
-    
+
     var url = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
-    
+
     http.request({
         url: url,
         async: true,
@@ -252,7 +252,7 @@ WeatherUnderground.prototype.fetchWeather = function () {
 
 WeatherUnderground.prototype.processResponse = function(response) {
     console.log("[WeatherUnderground] Update");
-    
+
     var self        = this;
     var current     = response.data.current_observation;
     var currentDate = new Date();
@@ -263,26 +263,26 @@ WeatherUnderground.prototype.processResponse = function(response) {
     sunset.minute   = parseInt(sunset.minute,10);
     sunrise.hour    = parseInt(sunrise.hour,10);
     sunrise.minute  = parseInt(sunrise.minute,10);
-    console.logJS(response.data);
-    
+    //console.logJS(response.data);
+
     var daynight = (
-            currentDate.getHours() > sunrise.hour 
-            || 
+            currentDate.getHours() > sunrise.hour
+            ||
             (
-                currentDate.getHours() === sunrise.hour 
+                currentDate.getHours() === sunrise.hour
                 && currentDate.getMinutes() > sunrise.minute
             )
-        ) 
+        )
         &&
         (
-            currentDate.getHours() < sunset.hour 
-            || 
+            currentDate.getHours() < sunset.hour
+            ||
             (
-                currentDate.getHours() === sunset.hour 
+                currentDate.getHours() === sunset.hour
                 && currentDate.getMinutes() < sunset.minute
             )
         ) ? 'day':'night';
-    
+
     // Handle current state
     var currentTemperature  = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
     var currentHigh         = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
@@ -301,7 +301,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
         }
     }
     self.devices.current.set("metrics:temperatureChange",changeTemperature);
-    
+
     self.devices.current.set("metrics:conditiongroup",self.transformCondition(current.icon));
     self.devices.current.set("metrics:condition",current.icon);
     //self.devices.current.set("metrics:title",current.weather);
@@ -318,7 +318,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.current.set("metrics:percipintensity",percipIntensity);
     self.devices.current.set("metrics:uv",uv);
     self.devices.current.set("metrics:solarradiation",solarradiation);
-    
+
     // Handle forecast
     var forecastHigh = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].high.celsius : forecast[1].high.fahrenheit);
     var forecastLow = parseFloat(self.config.unitTemperature === "celsius" ? forecast[1].low.celsius : forecast[1].low.fahrenheit);
@@ -332,7 +332,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.forecast.set("metrics:high",forecastHigh);
     self.devices.forecast.set("metrics:low",forecastLow);
     self.devices.forecast.set("metrics:raw",forecast);
-    
+
     // Forecast low/high humidity
     if (self.config.forecastLowDevice === true) {
         self.devices.forecastLow.set("metrics:level", forecastLow);
@@ -340,12 +340,12 @@ WeatherUnderground.prototype.processResponse = function(response) {
     if (self.config.forecastHighDevice === true) {
         self.devices.forecastHigh.set("metrics:level", forecastHigh);
     }
-    
+
     // Handle humidity
     if (self.config.humidityDevice === true) {
         self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity,10));
     }
-    
+
     // Handle wind
     if (self.config.windDevice === true) {
         var windKph = parseInt(current.wind_kph,10);
@@ -370,17 +370,17 @@ WeatherUnderground.prototype.processResponse = function(response) {
         self.devices.wind.set("metrics:beaufort",beaufort);
         self.averageSet(self.devices.wind,(self.config.unitSystem === "metric" ? windKph : windMph));
     }
-    
+
     // Handle UV
     if (self.config.uvDevice === true) {
         self.averageSet(self.devices.uv,uv);
     }
-    
+
     // Handle solar intensity
     if (self.config.solarDevice === true) {
         self.averageSet(self.devices.solar,solarradiation);
     }
-    
+
     // Handle barometer
     if (self.config.barometerDevice === true) {
         var pressure = parseFloat(self.config.unitSystem === "metric" ? current.pressure_mb : current.pressure_in);
@@ -400,7 +400,7 @@ WeatherUnderground.prototype.transformCondition = function(condition) {
     } else if (_.contains(["clear", "hazy", "mostlysunny", "partlysunny", "partlycloudy"], condition)) {
         return 'fair';
     }
-    
+
     return 'unknown';
 };
 
@@ -426,4 +426,4 @@ WeatherUnderground.prototype.averageSet = function(deviceObject,value,count) {
 };
 
 
- 
+
