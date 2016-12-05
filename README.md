@@ -1,7 +1,7 @@
 # Zway-WeatherUnderground
 
 Zway Automation module for fetching current condition and forecasts from the
-WeatherUnderground API. Creates virtual devices for humidity, wind, current 
+WeatherUnderground API. Creates virtual devices for humidity, wind, current
 conditions, UV index, barometric pressure and forecasts.
 
 See http://www.wunderground.com/weather/api/d/docs for details.
@@ -10,7 +10,7 @@ See http://www.wunderground.com/weather/api/d/docs for details.
 
 ## location
 
-Accepts any format that constitutes a valid API query. 
+Accepts any format that constitutes a valid API query.
 
 *   AIRPORTCODE (eg. "VIE")
 *   COUNTRY/CITY (eg. "Austria/Vienna")
@@ -28,7 +28,7 @@ Display metric or imperial units for air pressure and wind speed
 
 ## apiKey
 
-Required API key for accessing the service. See 
+Required API key for accessing the service. See
 http://www.wunderground.com/weather/api/ for obtaining an API key.
 
 ## uvDevice, windDevice, humidityDevice, barometerDevice
@@ -41,7 +41,7 @@ This module creates up to six virtual devices
 
 ## Current conditions
 
-Displays the current condition as an icon and the current temperature. 
+Displays the current condition as an icon and the current temperature.
 Additionally the following metrics are set
 
 *    metrics:level Current temperature
@@ -58,7 +58,7 @@ Additionally the following metrics are set
 
 ## Forecast
 
-Displays the forecasted condition as an icon, and the expected temperature 
+Displays the forecasted condition as an icon, and the expected temperature
 range.
 
 *    metrics:level Forecast temperature range
@@ -96,7 +96,7 @@ Displays the current UV index [0-11+]
 
 ## Barometer
 
-Displays the current air pressure. Rising and falling pressure is also 
+Displays the current air pressure. Rising and falling pressure is also
 indicated by the icon.
 
 *    metrics:trend: Pressure trend
@@ -108,11 +108,11 @@ No events are emitted
 # Installation
 
 The prefered way of installing this module is via the "Zwave.me App Store"
-available in 2.2.0 and higher. For stable module releases no access token is 
-required. If you want to test the latest pre-releases use 'k1_beta' as 
+available in 2.2.0 and higher. For stable module releases no access token is
+required. If you want to test the latest pre-releases use 'k1_beta' as
 app store access token.
 
-For developers and users of older Zway versions installation via git is 
+For developers and users of older Zway versions installation via git is
 recommended.
 
 ```shell
@@ -136,10 +136,10 @@ git checkout -b master --track origin/master
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or any 
+the Free Software Foundation, either version 3 of the License, or any
 later version.
 
-Parts of the barometer icon are from (http://www.flaticon.com/authors/yannick) 
+Parts of the barometer icon are from (http://www.flaticon.com/authors/yannick)
 , licensed under the Creative Commons 3.0 license.
 
 This program is distributed in the hope that it will be useful,
