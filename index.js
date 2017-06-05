@@ -256,32 +256,35 @@ WeatherUnderground.prototype.processResponse = function(response) {
     var self        = this;
     var current     = response.data.current_observation;
     var currentDate = new Date();
-    var sunrise     = response.data.sun_phase.sunrise;
-    var sunset      = response.data.sun_phase.sunset;
     var forecast    = response.data.forecast.simpleforecast.forecastday;
-    sunset.hour     = parseInt(sunset.hour,10);
-    sunset.minute   = parseInt(sunset.minute,10);
-    sunrise.hour    = parseInt(sunrise.hour,10);
-    sunrise.minute  = parseInt(sunrise.minute,10);
-    //console.logJS(response.data);
+    var sun_phase   = response.data.sun_phase;
+    var daynight    = 'day';
+    if (typeof(sun_phase) !== 'undefined') {
+        var sunrise     = response.data.sun_phase.sunrise;
+        var sunset      = response.data.sun_phase.sunset;
+        sunset.hour     = parseInt(sunset.hour,10);
+        sunset.minute   = parseInt(sunset.minute,10);
+        sunrise.hour    = parseInt(sunrise.hour,10);
+        sunrise.minute  = parseInt(sunrise.minute,10);
 
-    var daynight = (
-            currentDate.getHours() > sunrise.hour
-            ||
-            (
-                currentDate.getHours() === sunrise.hour
-                && currentDate.getMinutes() > sunrise.minute
+        daynight = (
+                currentDate.getHours() > sunrise.hour
+                ||
+                (
+                    currentDate.getHours() === sunrise.hour
+                    && currentDate.getMinutes() > sunrise.minute
+                )
             )
-        )
-        &&
-        (
-            currentDate.getHours() < sunset.hour
-            ||
+            &&
             (
-                currentDate.getHours() === sunset.hour
-                && currentDate.getMinutes() < sunset.minute
-            )
-        ) ? 'day':'night';
+                currentDate.getHours() < sunset.hour
+                ||
+                (
+                    currentDate.getHours() === sunset.hour
+                    && currentDate.getMinutes() < sunset.minute
+                )
+            ) ? 'day':'night';
+    }
 
     // Handle current state
     var currentTemperature  = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
