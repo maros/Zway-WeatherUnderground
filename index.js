@@ -9,6 +9,8 @@ Description:
 
 ******************************************************************************/
 
+/*jshint loopfunc: true */
+
 function WeatherUnderground (id, controller) {
     // Call superconstructor first (AutomationModule)
     WeatherUnderground.super_.call(this, id, controller);
@@ -224,19 +226,23 @@ WeatherUnderground.prototype.addDevice = function(prefix,defaults) {
 // --- Module methods
 // ----------------------------------------------------------------------------
 
-WeatherUnderground.prototype.fetchWeather = function () {
+WeatherUnderground.prototype.fetchWeather = function (location, repeat) {
     var self = this;
 
     if (typeof(self.update) !== 'undefined') {
         clearTimeout(self.update);
     }
 
-    var url = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+self.config.location+".json";
+    repeat   = repeat || false;
+    location = location || self.config.location;
+    var url  = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+location+".json";
 
     http.request({
         url: url,
         async: true,
-        success: function(response) { self.processResponse(response); },
+        success: function(response) {
+            self.processResponse(response,repeat);
+        },
         error: function(response) {
             console.error("[WeatherUnderground] Update error: "+response.statusText);
             console.logJS(response);
@@ -250,7 +256,7 @@ WeatherUnderground.prototype.fetchWeather = function () {
     });
 };
 
-WeatherUnderground.prototype.processResponse = function(response) {
+WeatherUnderground.prototype.processResponse = function(response,repeat) {
     console.log("[WeatherUnderground] Update");
 
     var self        = this;
@@ -287,6 +293,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     }
 
     // Handle current state
+    var maxDiff             = self.config.unitTemperature === "celsius" ? 7:13;
     var currentTemperature  = parseFloat(self.config.unitTemperature === "celsius" ? current.temp_c : current.temp_f);
     var currentHigh         = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].high.celsius : forecast[0].high.fahrenheit);
     var currentLow          = parseFloat(self.config.unitTemperature === "celsius" ? forecast[0].low.celsius : forecast[0].low.fahrenheit);
@@ -296,6 +303,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     var temperatureList     = self.listSet(self.devices.current,"temperature_list",currentTemperature,3);
     var temperatureDiff     = _.last(temperatureList) - _.first(temperatureList);
     var changeTemperature   = 'unchanged';
+    var humidity            = parseInt(current.relative_humidity,10);
     if (Math.abs(temperatureDiff) > 0.1) {
         if (temperatureDiff > 0) {
             changeTemperature = 'rise';
@@ -303,6 +311,14 @@ WeatherUnderground.prototype.processResponse = function(response) {
             changeTemperature = 'fall';
         }
     }
+
+    if (! repeat &&
+        (humidity === -999 || humidity === -9999 || currentTemperature > currentHigh + maxDiff || currentTemperature < currentLow - maxDiff)) {
+        console.error('[WeatherUnderground] Fallback to other weather station due to invalid data');
+        self.fetchWeather(current.display_location.full,true);
+        return;
+    }
+
     self.devices.current.set("metrics:temperatureChange",changeTemperature);
 
     self.devices.current.set("metrics:conditiongroup",self.transformCondition(current.icon));
@@ -310,7 +326,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     //self.devices.current.set("metrics:title",current.weather);
     self.devices.current.set("metrics:level",currentTemperature);
     self.devices.current.set("metrics:temperature",currentTemperature);
-    self.devices.current.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
+    self.devices.current.set("metrics:icon", "https://icons.wxug.com/i/c/k/"+(daynight === 'night' ? 'nt_':'')+current.icon+".gif");
     self.devices.current.set("metrics:feelslike", parseFloat(self.config.unitTemperature === "celsius" ? current.feelslike_c : current.feelslike_f));
     self.devices.current.set("metrics:weather",current.weather);
     self.devices.current.set("metrics:pop",forecast[0].pop);
@@ -329,7 +345,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
     self.devices.forecast.set("metrics:condition",forecast[1].icon);
     //self.devices.current.set("metrics:title",forecast[1].weather);
     self.devices.forecast.set("metrics:level", forecastLow + ' - ' + forecastHigh);
-    self.devices.forecast.set("metrics:icon", "http://icons.wxug.com/i/c/k/"+forecast[1].icon+".gif");
+    self.devices.forecast.set("metrics:icon", "https://icons.wxug.com/i/c/k/"+forecast[1].icon+".gif");
     self.devices.forecast.set("metrics:pop",forecast[1].pop);
     self.devices.forecast.set("metrics:weather",forecast[1].conditions);
     self.devices.forecast.set("metrics:high",forecastHigh);
@@ -346,7 +362,7 @@ WeatherUnderground.prototype.processResponse = function(response) {
 
     // Handle humidity
     if (self.config.humidityDevice === true) {
-        self.devices.humidity.set("metrics:level", parseInt(current.relative_humidity,10));
+        self.devices.humidity.set("metrics:level", humidity);
     }
 
     // Handle wind
