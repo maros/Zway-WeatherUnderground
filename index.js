@@ -147,16 +147,16 @@ WeatherUnderground.prototype.init = function (config) {
     var intervalTime    = parseInt(self.config.interval,10) * 60 * 1000;
 
     self.timer = setInterval(function() {
-        self.fetchWeather(self);
+        self.fetchWeather();
     }, intervalTime);
 
     setTimeout(function() {
         if (typeof(updateTime) === 'undefined') {
-            self.fetchWeather(self);
+            self.fetchWeather();
         } else {
             console.log('[WeatherUnderground] Last update time '+updateTime);
             if ((updateTime + intervalTime / 3) < currentTime) {
-                self.fetchWeather(self);
+                self.fetchWeather();
             }
         }
     },1000);
@@ -235,7 +235,12 @@ WeatherUnderground.prototype.fetchWeather = function (location, repeat) {
 
     repeat   = repeat || false;
     location = location || self.config.location;
+    if (_.isArray(location)) {
+        location = location[0];
+    }
     var url  = "http://api.wunderground.com/api/"+self.config.apiKey+"/conditions/forecast/astronomy/q/"+location+".json";
+
+    console.log("[WeatherUnderground] Fetch weather for "+location);
 
     http.request({
         url: url,
@@ -252,6 +257,9 @@ WeatherUnderground.prototype.fetchWeather = function (location, repeat) {
                 "module",
                 self.constructor.name
             );
+            if (location !== 'autoip') {
+                self.fetchWeather('autoip',true);
+            }
         }
     });
 };
