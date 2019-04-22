@@ -15,7 +15,7 @@
    "interval_label" : "Aktualisierungsintervall",
    "location" : "Standort",
    "location_helper" : "Entweder im Format 'Land/Stadt', 'Breite,Länge', 'Flughafencode' oder 'pws:WeatherundergoundPwsID' (siehe query in http://www.wunderground.com/weather/api/d/docs?d=data/index)",
-   "m_descr" : "Dieses Modul holt aktuelle Wetterdaten und Vorhersagen von wunderground.com. Es wird je ein Modul für die aktuellen Wetterbedingungen, die Vorhersage, Windbedingungen, UV Index und den Luftdruck angelegt.<br>Siehe <a href=https://github.com/maros/Zway-WeatherUnderground/blob/master/README.md>github.com/maros/Zway-WeatherUnderground</a> für detailliertere Dokumentation.",
+   "m_descr" : "ACHTUNG: WeatherUndergound hat seine API deaktiviert! Dieses Modul holt aktuelle Wetterdaten und Vorhersagen von wunderground.com. Es wird je ein Modul für die aktuellen Wetterbedingungen, die Vorhersage, Windbedingungen, UV Index und den Luftdruck angelegt.<br>Siehe <a href=https://github.com/maros/Zway-WeatherUnderground/blob/master/README.md>github.com/maros/Zway-WeatherUnderground</a> für detailliertere Dokumentation.",
    "m_title" : "WeatherUndergound Weather",
    "solar" : "Sonnen Intensität",
    "solar_device_label" : "Sonnen Intensität Modul",
