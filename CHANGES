@@ -1,3 +1,8 @@
+1.13 2019 Apr 26, Fri
+    * Add deprecation notice
+    * Improved location handling
+    * Fetch weather retry
+
 1.12 2017 Jun 24, Sat
     * Handle sunset/rise only when data is available
     * Update copyright
